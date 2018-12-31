@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Yan&#39;s git io">
+  <meta name="keyword" content="YAN&#39;s BLOG">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Pandas Cheetsheet | YAN&#39;s BLOG
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>YAN's BLOG</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Pandas Cheetsheet</h2>
+  <p class="post-date">2018-12-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="基本数据集操作"><a href="#基本数据集操作" class="headerlink" title="基本数据集操作"></a>基本数据集操作</h1><h3 id="（1）读取-CSV-格式的数据集"><a href="#（1）读取-CSV-格式的数据集" class="headerlink" title="（1）读取 CSV 格式的数据集"></a>（1）读取 CSV 格式的数据集</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pd.read_csv(<span class="string">'csv_file'</span>)</span><br><span class="line">pd.read_excel(<span class="string">'excel_file'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="2-将-DataFrame-直接写入-CSV-文件"><a href="#2-将-DataFrame-直接写入-CSV-文件" class="headerlink" title="(2)将 DataFrame 直接写入 CSV 文件"></a>(2)将 DataFrame 直接写入 CSV 文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.to_csv(<span class="string">"data.csv"</span>, sep=<span class="string">","</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="3-基本的数据集特征信息"><a href="#3-基本的数据集特征信息" class="headerlink" title="(3)基本的数据集特征信息"></a>(3)基本的数据集特征信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.info()</span><br></pre></td></tr></table></figure>
+<h3 id="4-基本的数据集统计信息"><a href="#4-基本的数据集统计信息" class="headerlink" title="(4) 基本的数据集统计信息"></a>(4) 基本的数据集统计信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.describe()</span><br></pre></td></tr></table></figure>
+<h3 id="5-Print-data-frame-in-a-table"><a href="#5-Print-data-frame-in-a-table" class="headerlink" title="(5)Print data frame in a table"></a>(5)Print data frame in a table</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(tabulate(print_table, headers=headers))</span><br><span class="line"><span class="comment"># 当「print_table」是一个列表，其中列表元素还是新的列表，「headers」为表头字符串组成的列表。</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-列出所有列的名字"><a href="#6-列出所有列的名字" class="headerlink" title="(6)列出所有列的名字"></a>(6)列出所有列的名字</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.columns</span><br></pre></td></tr></table></figure>
+<h1 id="基本数据处理"><a href="#基本数据处理" class="headerlink" title="基本数据处理"></a>基本数据处理</h1><h3 id="1-删除缺失数据"><a href="#1-删除缺失数据" class="headerlink" title="(1)删除缺失数据"></a>(1)删除缺失数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_df = df.dropna(axis=<span class="number">0</span>, how=<span class="string">'any'</span>)</span><br><span class="line"><span class="comment"># 返回一个 DataFrame，其中删除了包含任何 NaN 值的给定轴，选择 how=「all」会删除所有元素都是 NaN 的给定轴。</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-替换缺失数据"><a href="#2-替换缺失数据" class="headerlink" title="(2)替换缺失数据"></a>(2)替换缺失数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.replace(to_replace=<span class="keyword">None</span>, value=<span class="keyword">None</span>)</span><br><span class="line"><span class="comment"># 使用 value 值代替 DataFrame 中的 to_replace 值，其中 value 和 to_replace 都需要我们赋予不同的值。</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-检查空值-NaN"><a href="#3-检查空值-NaN" class="headerlink" title="(3)检查空值 NaN"></a>(3)检查空值 NaN</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pd.isnull(object)</span><br><span class="line"><span class="comment"># 检查缺失值，即数值数组中的 NaN 和目标数组中的 None/NaN。</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-删除特征"><a href="#4-删除特征" class="headerlink" title="(4)删除特征"></a>(4)删除特征</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_df = df.drop(<span class="string">'feature_variable_name'</span>, axis=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># axis 选择 0 表示行，选择表示列。</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-将目标类型转换为浮点型"><a href="#5-将目标类型转换为浮点型" class="headerlink" title="(5)将目标类型转换为浮点型"></a>(5)将目标类型转换为浮点型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pd.to_numeric(df[<span class="string">"feature_name"</span>], errors=<span class="string">'coerce'</span>)</span><br><span class="line"><span class="comment"># 将目标类型转化为数值从而进一步执行计算，在这个案例中为字符串。</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-将-DataFrame-转换为-NumPy-数组"><a href="#6-将-DataFrame-转换为-NumPy-数组" class="headerlink" title="(6)将 DataFrame 转换为 NumPy 数组"></a>(6)将 DataFrame 转换为 NumPy 数组</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_df = df.as_matrix()</span><br></pre></td></tr></table></figure>
+<h3 id="7-取-DataFrame-的前面「n」行"><a href="#7-取-DataFrame-的前面「n」行" class="headerlink" title="(7)取 DataFrame 的前面「n」行"></a>(7)取 DataFrame 的前面「n」行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.head(n)</span><br></pre></td></tr></table></figure>
+<h3 id="8-通过特征名取数据"><a href="#8-通过特征名取数据" class="headerlink" title="(8)通过特征名取数据"></a>(8)通过特征名取数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.loc[feature_name]</span><br></pre></td></tr></table></figure>
+<h1 id="DataFrame-操作"><a href="#DataFrame-操作" class="headerlink" title="DataFrame 操作"></a>DataFrame 操作</h1><h3 id="1-对-DataFrame-使用函数"><a href="#1-对-DataFrame-使用函数" class="headerlink" title="(1)对 DataFrame 使用函数"></a>(1)对 DataFrame 使用函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该函数将令 DataFrame 中「height」行的所有值乘上 2</span></span><br><span class="line">df[<span class="string">"height"</span>].apply(*<span class="keyword">lambda</span>* height: <span class="number">2</span> * height)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OR</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multiply</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * <span class="number">2</span></span><br><span class="line"></span><br><span class="line">df[<span class="string">"height"</span>].apply(multiply)</span><br></pre></td></tr></table></figure>
+<h3 id="2-重命名行"><a href="#2-重命名行" class="headerlink" title="(2)重命名行"></a>(2)重命名行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面代码会重命名 DataFrame 的第三行为「size」</span></span><br><span class="line">df.rename(columns = &#123;df.columns[<span class="number">2</span>]:<span class="string">'size'</span>&#125;, inplace=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="3-取某一行的唯一实体"><a href="#3-取某一行的唯一实体" class="headerlink" title="(3)取某一行的唯一实体"></a>(3)取某一行的唯一实体</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">"name"</span>].unique()</span><br></pre></td></tr></table></figure>
+<h3 id="3-访问子-DataFrame"><a href="#3-访问子-DataFrame" class="headerlink" title="(3)访问子 DataFrame"></a>(3)访问子 DataFrame</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_df = df[[<span class="string">"name"</span>, <span class="string">"size"</span>]]</span><br></pre></td></tr></table></figure>
+<h3 id="4-总结数据信息"><a href="#4-总结数据信息" class="headerlink" title="(4)总结数据信息"></a>(4)总结数据信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Sum of values in a data frame</span></span><br><span class="line">df.sum()</span><br><span class="line"><span class="comment"># Lowest value of a data frame</span></span><br><span class="line">df.min()</span><br><span class="line"><span class="comment"># Highest value</span></span><br><span class="line">df.max()</span><br><span class="line"><span class="comment"># Index of the lowest value</span></span><br><span class="line">df.idxmin()</span><br><span class="line"><span class="comment"># Index of the highest value</span></span><br><span class="line">df.idxmax()</span><br><span class="line"><span class="comment"># Statistical summary of the data frame, with quartiles, median, etc.</span></span><br><span class="line">df.describe()</span><br><span class="line"><span class="comment"># Average values</span></span><br><span class="line">df.mean()</span><br><span class="line"><span class="comment"># Median values</span></span><br><span class="line">df.median()</span><br><span class="line"><span class="comment"># Correlation between columns</span></span><br><span class="line">df.corr()</span><br><span class="line"><span class="comment"># To get these values for only one column, just select it like this#</span></span><br><span class="line">df[<span class="string">"size"</span>].median()</span><br></pre></td></tr></table></figure>
+<h3 id="5-给数据排序"><a href="#5-给数据排序" class="headerlink" title="(5)给数据排序"></a>(5)给数据排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.sort_values(ascending = <span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="6-索引"><a href="#6-索引" class="headerlink" title="(6)索引"></a>(6)索引</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[df[<span class="string">"size"</span>] == <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="7-选值"><a href="#7-选值" class="headerlink" title="(7) 选值"></a>(7) 选值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.loc([<span class="number">0</span>], [<span class="string">'size'</span>])</span><br></pre></td></tr></table></figure>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#pandas">
+    <span class="tag-code">pandas</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/12/31/how-i-create-github-io/">
+        <span class="nav-arrow">← </span>
+        
+          How to create Github IO blog
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/12/31/bayesian-methods-em/">
+        
+          Bayesian Methods EM
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#基本数据集操作"><span class="toc-nav-text">基本数据集操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#（1）读取-CSV-格式的数据集"><span class="toc-nav-text">（1）读取 CSV 格式的数据集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-将-DataFrame-直接写入-CSV-文件"><span class="toc-nav-text">(2)将 DataFrame 直接写入 CSV 文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-基本的数据集特征信息"><span class="toc-nav-text">(3)基本的数据集特征信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-基本的数据集统计信息"><span class="toc-nav-text">(4) 基本的数据集统计信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-Print-data-frame-in-a-table"><span class="toc-nav-text">(5)Print data frame in a table</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-列出所有列的名字"><span class="toc-nav-text">(6)列出所有列的名字</span></a></li></ol></li></ol><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#基本数据处理"><span class="toc-nav-text">基本数据处理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-删除缺失数据"><span class="toc-nav-text">(1)删除缺失数据</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-替换缺失数据"><span class="toc-nav-text">(2)替换缺失数据</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-检查空值-NaN"><span class="toc-nav-text">(3)检查空值 NaN</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-删除特征"><span class="toc-nav-text">(4)删除特征</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-将目标类型转换为浮点型"><span class="toc-nav-text">(5)将目标类型转换为浮点型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-将-DataFrame-转换为-NumPy-数组"><span class="toc-nav-text">(6)将 DataFrame 转换为 NumPy 数组</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#7-取-DataFrame-的前面「n」行"><span class="toc-nav-text">(7)取 DataFrame 的前面「n」行</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-通过特征名取数据"><span class="toc-nav-text">(8)通过特征名取数据</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#DataFrame-操作"><span class="toc-nav-text">DataFrame 操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-对-DataFrame-使用函数"><span class="toc-nav-text">(1)对 DataFrame 使用函数</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-重命名行"><span class="toc-nav-text">(2)重命名行</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-取某一行的唯一实体"><span class="toc-nav-text">(3)取某一行的唯一实体</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-访问子-DataFrame"><span class="toc-nav-text">(3)访问子 DataFrame</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-总结数据信息"><span class="toc-nav-text">(4)总结数据信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-给数据排序"><span class="toc-nav-text">(5)给数据排序</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-索引"><span class="toc-nav-text">(6)索引</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#7-选值"><span class="toc-nav-text">(7) 选值</span></a></li></ol></li>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2018/12/31/pandas-cheetsheet/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "dongnanzhy";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Pandas Cheetsheet",
+        owner: "dongnanzhy",
+        repo: "dongnanzhy.github.io",
+        oauth: {
+          client_id: "6e8efba4b92de298d180",
+          client_secret: "ef25328fb6ac8348ad6921d892776be451db3639"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'http://yoursite.com/2018/12/31/pandas-cheetsheet/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Yan&#39;s git io">
+  <meta name="keyword" content="YAN&#39;s BLOG">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Bayesian Methods MCMC | YAN&#39;s BLOG
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>YAN's BLOG</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Bayesian Methods MCMC</h2>
+  <p class="post-date">2018-12-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Using-PyMC3"><a href="#Using-PyMC3" class="headerlink" title="Using PyMC3"></a>Using PyMC3</h1><p>In this assignment, we will learn how to use a library for probabilistic programming and inference called <a href="http://docs.pymc.io/" target="_blank" rel="noopener">PyMC3</a>.</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>Libraries that are required for this tasks can be installed with the following command (if you use PyPI):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pymc3 pandas numpy matplotlib seaborn</span><br></pre></td></tr></table></figure>
+<p>You can also install pymc3 from source using <a href="https://github.com/pymc-devs/pymc3#installation" target="_blank" rel="noopener">the instruction</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy.random <span class="keyword">as</span> rnd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> animation</span><br><span class="line"><span class="keyword">import</span> pymc3 <span class="keyword">as</span> pm</span><br><span class="line"><span class="keyword">from</span> grader <span class="keyword">import</span> Grader</span><br><span class="line">%pylab inline</span><br></pre></td></tr></table></figure>
+<h3 id="Grading"><a href="#Grading" class="headerlink" title="Grading"></a>Grading</h3><p>We will create a grader instance below and use it to collect your answers. Note that these outputs will be stored locally inside grader and will be uploaded to the platform only after running submitting function in the last part of this assignment. If you want to make a partial submission, you can run that cell anytime you want.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader = Grader()</span><br></pre></td></tr></table></figure>
+<h2 id="Task-1-Alice-and-Bob"><a href="#Task-1-Alice-and-Bob" class="headerlink" title="Task 1. Alice and Bob"></a>Task 1. Alice and Bob</h2><p>Alice and Bob are trading on the market. Both of them are selling the Thing and want to get as high profit as possible.<br>Every hour they check out with each other’s prices and adjust their prices to compete on the market. Although they have different strategies for price setting.</p>
+<p><strong>Alice</strong>: takes Bob’s price during the <strong>previous</strong> hour, multiply by 0.6, add 90\$, add Gaussian noise from $N(0, 20^2)$.</p>
+<p><strong>Bob</strong>: takes Alice’s price during the <strong>current</strong> hour, multiply by 1.2 and subtract 20\$, add Gaussian noise from $N(0, 10^2)$.</p>
+<p>The problem is to find the joint distribution of Alice and Bob’s prices after many hours of such an experiment.</p>
+<h3 id="Task-1-1"><a href="#Task-1-1" class="headerlink" title="Task 1.1"></a>Task 1.1</h3><p>Implement the <code>run_simulation</code> function according to the description above. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model():</span><br><span class="line">    alice_gaussian = pm.Normal(<span class="string">'alice'</span>, mu=<span class="number">0</span>, sd=<span class="number">1</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_simulation</span><span class="params">(alice_start_price=<span class="number">300.0</span>, bob_start_price=<span class="number">300.0</span>, seed=<span class="number">42</span>, num_hours=<span class="number">10000</span>, burnin=<span class="number">1000</span>)</span>:</span></span><br><span class="line">    <span class="string">"""Simulates an evolution of prices set by Bob and Alice.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    The function should simulate Alice and Bob behavior for `burnin' hours, then ignore the obtained</span></span><br><span class="line"><span class="string">    simulation results, and then simulate it for `num_hours' more.</span></span><br><span class="line"><span class="string">    The initial burnin (also sometimes called warmup) is done to make sure that the distribution stabilized.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Please don't change the signature of the function.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        two lists, with Alice and with Bob prices. Both lists should be of length num_hours.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    np.random.seed(seed)</span><br><span class="line">    </span><br><span class="line">    alice_prices = [alice_start_price]</span><br><span class="line">    bob_prices = [bob_start_price]</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(burnin+num_hours<span class="number">-1</span>):</span><br><span class="line">        alice_prices.append(bob_prices[<span class="number">-1</span>] * <span class="number">0.6</span> + <span class="number">90</span> + np.random.randn() * <span class="number">20</span>) </span><br><span class="line">        bob_prices.append(alice_prices[<span class="number">-1</span>] * <span class="number">1.2</span> - <span class="number">20</span> + np.random.randn() *<span class="number">10</span>)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> alice_prices[burnin:], bob_prices[burnin:]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">alice_prices, bob_prices = run_simulation(alice_start_price=<span class="number">300</span>, bob_start_price=<span class="number">300</span>, seed=<span class="number">42</span>, num_hours=<span class="number">3</span>, burnin=<span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> len(alice_prices) != <span class="number">3</span>:</span><br><span class="line">    <span class="keyword">raise</span> RuntimeError(<span class="string">'Make sure that the function returns `num_hours` data points.'</span>)</span><br><span class="line">grader.submit_simulation_trajectory(alice_prices, bob_prices)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.1 (Alice trajectory) is: 279.93428306022463  291.67686875834846
+Current answer for task 1.1 (Bob trajectory) is: 314.5384966605577  345.2425410740984
+</code></pre><h3 id="Task-1-2"><a href="#Task-1-2" class="headerlink" title="Task 1.2"></a>Task 1.2</h3><p>What is the average prices for Alice and Bob after the burnin period? Whose prices are higher?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">alice_prices, bob_prices = run_simulation()</span><br><span class="line">average_alice_price = np.mean(alice_prices)</span><br><span class="line">average_bob_price = np.mean(bob_prices)</span><br><span class="line"><span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">grader.submit_simulation_mean(average_alice_price, average_bob_price)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.2 (Alice mean) is: 278.85416992423353
+Current answer for task 1.2 (Bob mean) is: 314.6064116545574
+</code></pre><h3 id="Task-1-3"><a href="#Task-1-3" class="headerlink" title="Task 1.3"></a>Task 1.3</h3><p>Let’s look at the 2-d histogram of prices, computed using kernel density estimation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = np.array(run_simulation())</span><br><span class="line">sns.jointplot(data[<span class="number">0</span>, :], data[<span class="number">1</span>, :], stat_func=<span class="keyword">None</span>, kind=<span class="string">'kde'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;seaborn.axisgrid.JointGrid at 0x7ff3b55d01d0&gt;
+</code></pre><p><img src="/images/bayesian_methods/mcmc/output_13_1.png" alt="png"></p>
+<p>Clearly, the prices of Bob and Alce are highly correlated. What is the Pearson correlation coefficient of Alice and Bob prices?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">correlation = np.corrcoef(data[<span class="number">0</span>, :], data[<span class="number">1</span>, :])</span><br><span class="line">correlation = correlation[<span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"><span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">grader.submit_simulation_correlation(correlation)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.3 (Bob and Alice prices correlation) is: 0.9636099866766943
+</code></pre><h3 id="Task-1-4"><a href="#Task-1-4" class="headerlink" title="Task 1.4"></a>Task 1.4</h3><p>We observe an interesting effect here: seems like the bivariate distribution of Alice and Bob prices converges to a correlated bivariate Gaussian distribution.</p>
+<p>Let’s check, whether the results change if we use different random seed and starting points.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a_prices, b_prices = run_simulation(alice_start_price=<span class="number">1000.0</span>, bob_start_price=<span class="number">1000.0</span>, seed=<span class="number">334</span>, num_hours=<span class="number">10000</span>, burnin=<span class="number">1000</span>)</span><br><span class="line">np.corrcoef(a_prices, b_prices)</span><br></pre></td></tr></table></figure>
+<pre><code>array([[1.        , 0.96392419],
+       [0.96392419, 1.        ]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Pick different starting prices, e.g 10, 1000, 10000 for Bob and Alice. </span></span><br><span class="line"><span class="comment"># Does the joint distribution of the two prices depend on these parameters?</span></span><br><span class="line">POSSIBLE_ANSWERS = &#123;</span><br><span class="line">    <span class="number">0</span>: <span class="string">'Depends on random seed and starting prices'</span>, </span><br><span class="line">    <span class="number">1</span>: <span class="string">'Depends only on random seed'</span>,</span><br><span class="line">    <span class="number">2</span>: <span class="string">'Depends only on starting prices'</span>,</span><br><span class="line">    <span class="number">3</span>: <span class="string">'Does not depend on random seed and starting prices'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">idx = <span class="number">3</span> <span class="comment">### TYPE THE INDEX OF THE CORRECT ANSWER HERE ###</span></span><br><span class="line">answer = POSSIBLE_ANSWERS[idx]</span><br><span class="line">grader.submit_simulation_depends(answer)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.4 (depends on the random data or not) is: Does not depend on random seed and starting prices
+</code></pre><h2 id="Task-2-Logistic-regression-with-PyMC3"><a href="#Task-2-Logistic-regression-with-PyMC3" class="headerlink" title="Task 2. Logistic regression with PyMC3"></a>Task 2. Logistic regression with PyMC3</h2><p>Logistic regression is a powerful model that allows you to analyze how a set of features affects some binary target label. Posterior distribution over the weights gives us an estimation of the influence of each particular feature on the probability of the target being equal to one. But most importantly, posterior distribution gives us the interval estimates for each weight of the model. This is very important for data analysis when you want to not only provide a good model but also estimate the uncertainty of your conclusions.</p>
+<p>In this task, we will learn how to use PyMC3 library to perform approximate Bayesian inference for logistic regression.</p>
+<p>This part of the assignment is based on the logistic regression tutorial by Peadar Coyle and J. Benjamin Cook.</p>
+<h3 id="Logistic-regression"><a href="#Logistic-regression" class="headerlink" title="Logistic regression."></a>Logistic regression.</h3><p>The problem here is to model how the probability that a person has salary $\geq$ \$50K is affected by his/her age, education, sex and other features.</p>
+<p>Let $y_i = 1$ if i-th person’s salary is $\geq$ \$50K and $y_i = 0$ otherwise. Let $x_{ij}$ be $j$-th feature of $i$-th person.</p>
+<p>Logistic regression models this probabilty in the following way:</p>
+<p>$$p(y_i = 1 \mid \beta) = \sigma (\beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_k x_{ik} ), $$</p>
+<p>where $\sigma(t) = \frac1{1 + e^{-t}}$</p>
+<h4 id="Odds-ratio"><a href="#Odds-ratio" class="headerlink" title="Odds ratio."></a>Odds ratio.</h4><p>Let’s try to answer the following question: does a gender of a person affects his or her salary? To do it we will use the <strong>concept of <em>odds</em> </strong>.</p>
+<p>If we have a binary random variable $y$ (which may indicate whether a person makes \$50K) and if the probabilty of the positive outcome $p(y = 1)$ is for example 0.8, we will say that the <em>odds</em> are 4 to 1 (or just 4 for short), because succeding is 4 time more likely than failing $\frac{p(y = 1)}{p(y = 0)} = \frac{0.8}{0.2} = 4$.</p>
+<p>Now, let’s return to the effect of gender on the salary. Let’s compute the <strong>ratio</strong> between the odds of a male having salary $\geq $ \$50K and the odds of a female (with the same level of education, experience and everything else) having salary $\geq$ \$50K. The first feature of each person in the dataset is the gender. Specifically, $x_{i1} = 0$ if the person is female and $x_{i1} = 1$ otherwise. Consider two people $i$ and $j$ having all but one features the same with the only difference in $x_{i1} \neq x_{j1}$.</p>
+<p>If the logistic regression model above estimates the probabilities exactly, the odds for a male will be (check it!):<br>$$<br>\frac{p(y_i = 1 \mid x_{i1}=1, x_{i2}, \ldots, x_{ik})}{p(y_i = 0 \mid x_{i1}=1, x_{i2}, \ldots, x_{ik})} = \frac{\sigma(\beta_1 + \beta_2 x_{i2} + \ldots)}{1 - \sigma(\beta_1 + \beta_2 x_{i2} + \ldots)} = \exp(\beta_1 + \beta_2 x_{i2} + \ldots)<br>$$</p>
+<p>Now the ratio of the male and female odds will be:<br>$$<br>\frac{\exp(\beta_1 \cdot 1 + \beta_2 x_{i2} + \ldots)}{\exp(\beta_1 \cdot 0 + \beta_2 x_{i2} + \ldots)} = \exp(\beta_1)<br>$$</p>
+<p>So given the correct logistic regression model, we can estimate odds ratio for some feature (gender in this example) by just looking at the corresponding coefficient. But of course, even if all the logistic regression assumptions are met we cannot estimate the coefficient exactly from real-world data, it’s just too noisy. So it would be really nice to build an interval estimate, which would tell us something along the lines “with probability 0.95 the odds ratio is greater than 0.8 and less than 1.2, so we cannot conclude that there is any gender discrimination in the salaries” (or vice versa, that “with probability 0.95 the odds ratio is greater than 1.5 and less than 1.9 and the discrimination takes place because a male has at least 1.5 higher probability to get &gt;$50k than a female with the same level of education, age, etc.”). <strong>In Bayesian statistics, this interval estimate is called <em>credible interval</em> </strong>.</p>
+<p>Unfortunately, it’s <strong>impossible to compute this credible interval analytically</strong>. So let’s use MCMC for that!</p>
+<h4 id="Credible-interval"><a href="#Credible-interval" class="headerlink" title="Credible interval"></a>Credible interval</h4><p>A credible interval for the value of $\exp(\beta_1)$ is an interval $[a, b]$ such that $p(a \leq \exp(\beta_1) \leq b \mid X_{\text{train}}, y_{\text{train}})$ is $0.95$ (or some other predefined value). To compute the interval, we need access to the posterior distribution $p(\exp(\beta_1) \mid X_{\text{train}}, y_{\text{train}})$.</p>
+<p>Lets for simplicity focus on the posterior on the parameters $p(\beta_1 \mid X_{\text{train}}, y_{\text{train}})$ since if we compute it, we can always find $[a, b]$ such that $p(\log a \leq \beta_1 \leq \log b \mid X_{\text{train}}, y_{\text{train}}) = p(a \leq \exp(\beta_1) \leq b \mid X_{\text{train}}, y_{\text{train}}) = 0.95$</p>
+<h3 id="Task-2-1-MAP-inference"><a href="#Task-2-1-MAP-inference" class="headerlink" title="Task 2.1 MAP inference"></a>Task 2.1 MAP inference</h3><p>Let’s read the dataset. This is a post-processed version of the <a href="http://archive.ics.uci.edu/ml/datasets/Adult" target="_blank" rel="noopener">UCI Adult dataset</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data = pd.read_csv(<span class="string">"adult_us_postprocessed.csv"</span>)</span><br><span class="line">data.head()</span><br></pre></td></tr></table></figure>
+<div><br><style scoped><br>    .dataframe tbody tr th:only-of-type {<br>        vertical-align: middle;<br>    }<br><br>    .dataframe tbody tr th {<br>        vertical-align: top;<br>    }<br><br>    .dataframe thead th {<br>        text-align: right;<br>    }<br></style><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>sex</th><br>      <th>age</th><br>      <th>educ</th><br>      <th>hours</th><br>      <th>income_more_50K</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>Male</td><br>      <td>39</td><br>      <td>13</td><br>      <td>40</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>Male</td><br>      <td>50</td><br>      <td>13</td><br>      <td>13</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>Male</td><br>      <td>38</td><br>      <td>9</td><br>      <td>40</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>Male</td><br>      <td>53</td><br>      <td>7</td><br>      <td>40</td><br>      <td>0</td><br>    </tr><br>    <tr><br>      <th>4</th><br>      <td>Female</td><br>      <td>28</td><br>      <td>13</td><br>      <td>40</td><br>      <td>0</td><br>    </tr><br>  </tbody><br></table><br></div>
+
+
+
+<p>Each row of the dataset is a person with his (her) features. The last column is the target variable $y$. 1 indicates that this person’s annual salary is more than $50K.</p>
+<p>First of all let’s set up a Bayesian logistic regression model (i.e. define priors on the parameters $\alpha$ and $\beta$ of the model) that predicts the value of “income_more_50K” based on <strong>person’s age and education</strong>:</p>
+<p>$$<br>p(y = 1 \mid \alpha, \beta_1, \beta_2) = \sigma(\alpha + \beta_1 x_1 + \beta_2 x_2) \<br>\alpha \sim N(0, 100^2) \<br>\beta_1 \sim N(0, 100^2) \<br>\beta_2 \sim N(0, 100^2), \<br>$$</p>
+<p>where $x_1$ is a person’s age, $x_2$ is his/her level of education, y indicates his/her level of income, $\alpha$, $\beta_1$ and $\beta_2$ are paramters of the model.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model() <span class="keyword">as</span> manual_logistic_model:</span><br><span class="line">    <span class="comment"># Declare pymc random variables for logistic regression coefficients with uninformative </span></span><br><span class="line">    <span class="comment"># prior distributions N(0, 100^2) on each weight using pm.Normal. </span></span><br><span class="line">    <span class="comment"># Don't forget to give each variable a unique name.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    a = pm.Normal(<span class="string">'a'</span>, mu=<span class="number">0</span>, sd=<span class="number">100</span>^<span class="number">2</span>)</span><br><span class="line">    b1 = pm.Normal(<span class="string">'b1'</span>, mu=<span class="number">0</span>, sd=<span class="number">100</span>^<span class="number">2</span>)</span><br><span class="line">    b2 = pm.Normal(<span class="string">'b2'</span>, mu=<span class="number">0</span>, sd=<span class="number">100</span>^<span class="number">2</span>)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Thansform these random variables into vector of probabilities p(y_i=1) using logistic regression model specified </span></span><br><span class="line">    <span class="comment"># above. PyMC random variables are theano shared variables and support simple mathematical operations.</span></span><br><span class="line">    <span class="comment"># For example:</span></span><br><span class="line">    <span class="comment"># z = pm.Normal('x', 0, 1) * np.array([1, 2, 3]) + pm.Normal('y', 0, 1) * np.array([4, 5, 6])`</span></span><br><span class="line">    <span class="comment"># is a correct PyMC expression.</span></span><br><span class="line">    <span class="comment"># Use pm.invlogit for the sigmoid function.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    logits = a * np.ones(data.shape[<span class="number">0</span>]) + b1 * data.age.values + b2 * data.educ.values</span><br><span class="line">    p_y = pm.invlogit(logits)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Declare PyMC Bernoulli random vector with probability of success equal to the corresponding value</span></span><br><span class="line">    <span class="comment"># given by the sigmoid function.</span></span><br><span class="line">    <span class="comment"># Supply target vector using "observed" argument in the constructor.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    Y_obs = pm.Bernoulli(<span class="string">'Y_obs'</span>, p_y, observed=data.income_more_50K.values)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Use pm.find_MAP() to find the maximum a-posteriori estimate for the vector of logistic regression weights.</span></span><br><span class="line">    map_estimate = pm.find_MAP()</span><br><span class="line">    print(map_estimate)</span><br></pre></td></tr></table></figure>
+<pre><code>logp = -18,844, ||grad|| = 57,293: 100%|██████████| 30/30 [00:00&lt;00:00, 162.41it/s]   
+
+{&apos;a&apos;: array(-6.74811924), &apos;b1&apos;: array(0.04348316), &apos;b2&apos;: array(0.36210805)}
+</code></pre><p>Sumbit MAP estimations of corresponding coefficients:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model() <span class="keyword">as</span> logistic_model:</span><br><span class="line">    <span class="comment"># There's a simpler interface for generalized linear models in pymc3. </span></span><br><span class="line">    <span class="comment"># Try to train the same model using pm.glm.GLM.from_formula.</span></span><br><span class="line">    <span class="comment"># Do not forget to specify that the target variable is binary (and hence follows Binomial distribution).</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    pm.glm.GLM.from_formula(<span class="string">'income_more_50K ~ age + educ'</span>, data=data, family=<span class="string">'binomial'</span>)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    </span><br><span class="line">    map_estimate = pm.find_MAP()</span><br><span class="line">    print(map_estimate)</span><br></pre></td></tr></table></figure>
+<pre><code>logp = -15,131, ||grad|| = 0.024014: 100%|██████████| 32/32 [00:00&lt;00:00, 190.40it/s]
+
+{&apos;Intercept&apos;: array(-6.7480998), &apos;age&apos;: array(0.04348259), &apos;educ&apos;: array(0.36210894)}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beta_age_coefficient = map_estimate[<span class="string">'age'</span>]  <span class="comment">### TYPE MAP ESTIMATE OF THE AGE COEFFICIENT HERE ###</span></span><br><span class="line">beta_education_coefficient = map_estimate[<span class="string">'educ'</span>]  <span class="comment">### TYPE MAP ESTIMATE OF THE EDUCATION COEFFICIENT HERE ###</span></span><br><span class="line">grader.submit_pymc_map_estimates(beta_age_coefficient, beta_education_coefficient)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.1 (MAP for age coef) is: 0.043482589526144325
+Current answer for task 2.1 (MAP for aducation coef) is: 0.3621089416949501
+</code></pre><h3 id="Task-2-2-MCMC"><a href="#Task-2-2-MCMC" class="headerlink" title="Task 2.2 MCMC"></a>Task 2.2 MCMC</h3><p>To find credible regions let’s perform MCMC inference.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># You will need the following function to visualize the sampling process.</span></span><br><span class="line"><span class="comment"># You don't need to change it.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_traces</span><span class="params">(traces, burnin=<span class="number">2000</span>)</span>:</span></span><br><span class="line">    <span class="string">''' </span></span><br><span class="line"><span class="string">    Convenience function:</span></span><br><span class="line"><span class="string">    Plot traces with overlaid means and values</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    </span><br><span class="line">    ax = pm.traceplot(traces[burnin:], figsize=(<span class="number">12</span>,len(traces.varnames)*<span class="number">1.5</span>),</span><br><span class="line">        lines=&#123;k: v[<span class="string">'mean'</span>] <span class="keyword">for</span> k, v <span class="keyword">in</span> pm.df_summary(traces[burnin:]).iterrows()&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, mn <span class="keyword">in</span> enumerate(pm.df_summary(traces[burnin:])[<span class="string">'mean'</span>]):</span><br><span class="line">        ax[i,<span class="number">0</span>].annotate(<span class="string">'&#123;:.2f&#125;'</span>.format(mn), xy=(mn,<span class="number">0</span>), xycoords=<span class="string">'data'</span></span><br><span class="line">                    ,xytext=(<span class="number">5</span>,<span class="number">10</span>), textcoords=<span class="string">'offset points'</span>, rotation=<span class="number">90</span></span><br><span class="line">                    ,va=<span class="string">'bottom'</span>, fontsize=<span class="string">'large'</span>, color=<span class="string">'#AA0022'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Metropolis-Hastings"><a href="#Metropolis-Hastings" class="headerlink" title="Metropolis-Hastings"></a>Metropolis-Hastings</h4><p>Let’s use Metropolis-Hastings algorithm for finding the samples from the posterior distribution.</p>
+<p>Once you wrote the code, explore the hyperparameters of Metropolis-Hastings such as the proposal distribution variance to speed up the convergence. You can use <code>plot_traces</code> function in the next cell to visually inspect the convergence.</p>
+<p>You may also use MAP-estimate to initialize the sampling scheme to speed things up. This will make the warmup (burnin) period shorter since you will start from a probable point.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model() <span class="keyword">as</span> logistic_model:</span><br><span class="line">    <span class="comment"># Since it is unlikely that the dependency between the age and salary is linear, we will include age squared</span></span><br><span class="line">    <span class="comment"># into features so that we can model dependency that favors certain ages.</span></span><br><span class="line">    <span class="comment"># Train Bayesian logistic regression model on the following features: sex, age, age^2, educ, hours</span></span><br><span class="line">    <span class="comment"># Use pm.sample to run MCMC to train this model.</span></span><br><span class="line">    <span class="comment"># To specify the particular sampler method (Metropolis-Hastings) to pm.sample,</span></span><br><span class="line">    <span class="comment"># use `pm.Metropolis`.</span></span><br><span class="line">    <span class="comment"># Train your model for 400 samples.</span></span><br><span class="line">    <span class="comment"># Save the output of pm.sample to a variable: this is the trace of the sampling procedure and will be used</span></span><br><span class="line">    <span class="comment"># to estimate the statistics of the posterior distribution.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    data[<span class="string">'age_2'</span>] = data[<span class="string">'age'</span>]^<span class="number">2</span></span><br><span class="line">    pm.glm.GLM.from_formula(<span class="string">'income_more_50K ~ sex + age + educ + hours + age_2'</span>, data=data, family=<span class="string">'binomial'</span>)</span><br><span class="line"></span><br><span class="line">    trace = pm.sample(<span class="number">400</span>, step=pm.Metropolis())</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br></pre></td></tr></table></figure>
+<pre><code>Only 400 samples in chain.
+Multiprocess sampling (4 chains in 4 jobs)
+CompoundStep
+&gt;Metropolis: [age_2]
+&gt;Metropolis: [hours]
+&gt;Metropolis: [educ]
+&gt;Metropolis: [age]
+&gt;Metropolis: [sex[T. Male]]
+&gt;Metropolis: [Intercept]
+Sampling 4 chains: 100%|██████████| 3600/3600 [02:59&lt;00:00, 20.06draws/s]
+The gelman-rubin statistic is larger than 1.4 for some parameters. The sampler did not converge.
+The estimated number of effective samples is smaller than 200 for some parameters.
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_traces(trace, burnin=<span class="number">200</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+AttributeError                            Traceback (most recent call last)
+
+&lt;ipython-input-47-8d29b264e93d&gt; in &lt;module&gt;()
+----&gt; 1 plot_traces(trace, burnin=200)
+
+
+&lt;ipython-input-45-9c3be988e461&gt; in plot_traces(traces, burnin)
+      8 
+      9     ax = pm.traceplot(traces[burnin:], figsize=(12,len(traces.varnames)*1.5),
+---&gt; 10         lines={k: v[&apos;mean&apos;] for k, v in pm.df_summary(traces[burnin:]).iterrows()})
+     11 
+     12     for i, mn in enumerate(pm.df_summary(traces[burnin:])[&apos;mean&apos;]):
+
+
+AttributeError: module &apos;pymc3&apos; has no attribute &apos;df_summary&apos;
+</code></pre><h4 id="NUTS-sampler"><a href="#NUTS-sampler" class="headerlink" title="NUTS sampler"></a>NUTS sampler</h4><p>Use pm.sample without specifying a particular sampling method (pymc3 will choose it automatically).<br>The sampling algorithm that will be used in this case is NUTS, which is a form of Hamiltonian Monte Carlo, in which parameters are tuned automatically. This is an advanced method that we hadn’t cover in the lectures, but it usually converges faster and gives less correlated samples compared to vanilla Metropolis-Hastings.</p>
+<p>Since the NUTS sampler doesn’t require to tune hyperparameters, let’s run it for 10 times more iterations than Metropolis-Hastings.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model() <span class="keyword">as</span> logistic_model:</span><br><span class="line">    <span class="comment"># Train Bayesian logistic regression model on the following features: sex, age, age_squared, educ, hours</span></span><br><span class="line">    <span class="comment"># Use pm.sample to run MCMC to train this model.</span></span><br><span class="line">    <span class="comment"># Train your model for *4000* samples (ten times more than before).</span></span><br><span class="line">    <span class="comment"># Training can take a while, so relax and wait :)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    data[<span class="string">'age_2'</span>] = data[<span class="string">'age'</span>]^<span class="number">2</span></span><br><span class="line">    pm.glm.GLM.from_formula(<span class="string">'income_more_50K ~ sex + age + educ + hours + age_2'</span>, data=data, family=<span class="string">'binomial'</span>)</span><br><span class="line"></span><br><span class="line">    trace = pm.sample(<span class="number">4000</span>, step=pm.NUTS())</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br></pre></td></tr></table></figure>
+<pre><code>Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [age_2, hours, educ, age, sex[T. Male], Intercept]
+Sampling 4 chains:  65%|██████▌   | 11778/18000 [1:31:33&lt;46:33,  2.23draws/s]  
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_traces(trace)</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+AttributeError                            Traceback (most recent call last)
+
+&lt;ipython-input-50-f3177cbb8580&gt; in &lt;module&gt;()
+----&gt; 1 plot_traces(trace)
+
+
+&lt;ipython-input-45-9c3be988e461&gt; in plot_traces(traces, burnin)
+      8 
+      9     ax = pm.traceplot(traces[burnin:], figsize=(12,len(traces.varnames)*1.5),
+---&gt; 10         lines={k: v[&apos;mean&apos;] for k, v in pm.df_summary(traces[burnin:]).iterrows()})
+     11 
+     12     for i, mn in enumerate(pm.df_summary(traces[burnin:])[&apos;mean&apos;]):
+
+
+AttributeError: module &apos;pymc3&apos; has no attribute &apos;df_summary&apos;
+</code></pre><h4 id="Estimating-the-odds-ratio"><a href="#Estimating-the-odds-ratio" class="headerlink" title="Estimating the odds ratio"></a>Estimating the odds ratio</h4><p>Now, let’s build the posterior distribution on the odds ratio given the dataset (approximated by MCMC).</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># We don't need to use a large burn-in here, since we initialize sampling</span></span><br><span class="line"><span class="comment"># from a good point (from our approximation of the most probable</span></span><br><span class="line"><span class="comment"># point (MAP) to be more precise).</span></span><br><span class="line">burnin = <span class="number">100</span></span><br><span class="line">b = trace[<span class="string">'sex[T. Male]'</span>][burnin:]</span><br><span class="line">plt.hist(np.exp(b), bins=<span class="number">20</span>, normed=<span class="keyword">True</span>)</span><br><span class="line">plt.xlabel(<span class="string">"Odds Ratio"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/mcmc/output_41_1.png" alt="png"></p>
+<p>Finally, we can find a credible interval  (recall that credible intervals are Bayesian and confidence intervals are frequentist) for this quantity. This may be the best part about Bayesian statistics: we get to interpret credibility intervals the way we’ve always wanted to interpret them. We are 95% confident that the odds ratio lies within our interval!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lb, ub = np.percentile(b, <span class="number">2.5</span>), np.percentile(b, <span class="number">97.5</span>)</span><br><span class="line">print(<span class="string">"P(%.3f &lt; Odds Ratio &lt; %.3f) = 0.95"</span> % (np.exp(lb), np.exp(ub)))</span><br></pre></td></tr></table></figure>
+<pre><code>P(2.973 &lt; Odds Ratio &lt; 3.435) = 0.95
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Submit the obtained credible interval.</span></span><br><span class="line">grader.submit_pymc_odds_ratio_interval(np.exp(lb), np.exp(ub))</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.2 (credible interval lower bound) is: 2.973400429464148
+Current answer for task 2.2 (credible interval upper bound) is: 3.4345892209585234
+</code></pre><h3 id="Task-2-3-interpreting-the-results"><a href="#Task-2-3-interpreting-the-results" class="headerlink" title="Task 2.3 interpreting the results"></a>Task 2.3 interpreting the results</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Does the gender affects salary in the provided dataset?</span></span><br><span class="line"><span class="comment"># (Note that the data is from 1996 and maybe not representative</span></span><br><span class="line"><span class="comment"># of the current situation in the world.)</span></span><br><span class="line">POSSIBLE_ANSWERS = &#123;</span><br><span class="line">    <span class="number">0</span>: <span class="string">'No, there is certainly no discrimination'</span>,</span><br><span class="line">    <span class="number">1</span>: <span class="string">'We cannot say for sure'</span>,</span><br><span class="line">    <span class="number">2</span>: <span class="string">'Yes, we are 95% sure that a female is *less* likely to get &gt;$50K than a male with the same age, level of education, etc.'</span>, </span><br><span class="line">    <span class="number">3</span>: <span class="string">'Yes, we are 95% sure that a female is *more* likely to get &gt;$50K than a male with the same age, level of education, etc.'</span>, </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">idx = <span class="number">2</span>     <span class="comment">### TYPE THE INDEX OF THE CORRECT ANSWER HERE ###</span></span><br><span class="line">answer = POSSIBLE_ANSWERS[idx]</span><br><span class="line">grader.submit_is_there_discrimination(answer)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.3 (does the data suggest gender discrimination?) is: Yes, we are 95% sure that a female is *less* likely to get &gt;$50K than a male with the same age, level of education, etc.
+</code></pre><h1 id="Authorization-amp-Submission"><a href="#Authorization-amp-Submission" class="headerlink" title="Authorization &amp; Submission"></a>Authorization &amp; Submission</h1><p>To submit assignment parts to Cousera platform, please, enter your e-mail and token into variables below. You can generate token on this programming assignment page. <b>Note:</b> Token expires 30 minutes after generation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">STUDENT_EMAIL = <span class="string">''</span></span><br><span class="line">STUDENT_TOKEN = <span class="string">''</span></span><br><span class="line">grader.status()</span><br></pre></td></tr></table></figure>
+<pre><code>You want to submit these numbers:
+Task 1.1 (Alice trajectory): 279.93428306022463  291.67686875834846
+Task 1.1 (Bob trajectory): 314.5384966605577  345.2425410740984
+Task 1.2 (Alice mean): 278.85416992423353
+Task 1.2 (Bob mean): 314.6064116545574
+Task 1.3 (Bob and Alice prices correlation): 0.9636099866766943
+Task 1.4 (depends on the random data or not): Does not depend on random seed and starting prices
+Task 2.1 (MAP for age coef): 0.043482589526144325
+Task 2.1 (MAP for aducation coef): 0.3621089416949501
+Task 2.2 (credible interval lower bound): 2.973400429464148
+Task 2.2 (credible interval upper bound): 3.4345892209585234
+Task 2.3 (does the data suggest gender discrimination?): Yes, we are 95% sure that a female is *less* likely to get &gt;$50K than a male with the same age, level of education, etc.
+</code></pre><p>If you want to submit these answers, run cell below</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit(STUDENT_EMAIL, STUDENT_TOKEN)</span><br></pre></td></tr></table></figure>
+<pre><code>Submitted to Coursera platform. See results on assignment page!
+</code></pre><h1 id="Optional-generating-videos-of-sampling-process"><a href="#Optional-generating-videos-of-sampling-process" class="headerlink" title="(Optional) generating videos of sampling process"></a>(Optional) generating videos of sampling process</h1><p>For this (optional) part you will need to install ffmpeg, e.g. by the following command on linux</p>
+<pre><code>apt-get install ffmpeg
+</code></pre><p>or the following command on Mac</p>
+<pre><code>brew install ffmpeg
+</code></pre><h2 id="Setting-things-up"><a href="#Setting-things-up" class="headerlink" title="Setting things up"></a>Setting things up</h2><p>You don’t need to modify the code below, it sets up the plotting functions. The code is based on <a href="https://twiecki.github.io/blog/2014/01/02/visualizing-mcmc/" target="_blank" rel="noopener">MCMC visualization tutorial</a>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> IPython.display <span class="keyword">import</span> HTML</span><br><span class="line"></span><br><span class="line"><span class="comment"># Number of MCMC iteration to animate.</span></span><br><span class="line">samples = <span class="number">400</span></span><br><span class="line"></span><br><span class="line">figsize(<span class="number">6</span>, <span class="number">6</span>)</span><br><span class="line">fig = plt.figure()</span><br><span class="line">s_width = (<span class="number">0.81</span>, <span class="number">1.29</span>)</span><br><span class="line">a_width = (<span class="number">0.11</span>, <span class="number">0.39</span>)</span><br><span class="line">samples_width = (<span class="number">0</span>, samples)</span><br><span class="line">ax1 = fig.add_subplot(<span class="number">221</span>, xlim=s_width, ylim=samples_width)</span><br><span class="line">ax2 = fig.add_subplot(<span class="number">224</span>, xlim=samples_width, ylim=a_width)</span><br><span class="line">ax3 = fig.add_subplot(<span class="number">223</span>, xlim=s_width, ylim=a_width,</span><br><span class="line">                      xlabel=<span class="string">'male coef'</span>,</span><br><span class="line">                      ylabel=<span class="string">'educ coef'</span>)</span><br><span class="line">fig.subplots_adjust(wspace=<span class="number">0.0</span>, hspace=<span class="number">0.0</span>)</span><br><span class="line">line1, = ax1.plot([], [], lw=<span class="number">1</span>)</span><br><span class="line">line2, = ax2.plot([], [], lw=<span class="number">1</span>)</span><br><span class="line">line3, = ax3.plot([], [], <span class="string">'o'</span>, lw=<span class="number">2</span>, alpha=<span class="number">.1</span>)</span><br><span class="line">line4, = ax3.plot([], [], lw=<span class="number">1</span>, alpha=<span class="number">.3</span>)</span><br><span class="line">line5, = ax3.plot([], [], <span class="string">'k'</span>, lw=<span class="number">1</span>)</span><br><span class="line">line6, = ax3.plot([], [], <span class="string">'k'</span>, lw=<span class="number">1</span>)</span><br><span class="line">ax1.set_xticklabels([])</span><br><span class="line">ax2.set_yticklabels([])</span><br><span class="line">lines = [line1, line2, line3, line4, line5, line6]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        line.set_data([], [])</span><br><span class="line">    <span class="keyword">return</span> lines</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">animate</span><span class="params">(i)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> logistic_model:</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># Burnin</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(samples): iter_sample.__next__() </span><br><span class="line">        trace = iter_sample.__next__()</span><br><span class="line"><span class="comment">#     import pdb; pdb.set_trace()</span></span><br><span class="line">    line1.set_data(trace[<span class="string">'sex[T. Male]'</span>][::<span class="number">-1</span>], range(len(trace[<span class="string">'sex[T. Male]'</span>])))</span><br><span class="line">    line2.set_data(range(len(trace[<span class="string">'educ'</span>])), trace[<span class="string">'educ'</span>][::<span class="number">-1</span>])</span><br><span class="line">    line3.set_data(trace[<span class="string">'sex[T. Male]'</span>], trace[<span class="string">'educ'</span>])</span><br><span class="line">    line4.set_data(trace[<span class="string">'sex[T. Male]'</span>], trace[<span class="string">'educ'</span>])</span><br><span class="line">    male = trace[<span class="string">'sex[T. Male]'</span>][<span class="number">-1</span>]</span><br><span class="line">    educ = trace[<span class="string">'educ'</span>][<span class="number">-1</span>]</span><br><span class="line">    line5.set_data([male, male], [educ, a_width[<span class="number">1</span>]])</span><br><span class="line">    line6.set_data([male, s_width[<span class="number">1</span>]], [educ, educ])</span><br><span class="line">    <span class="keyword">return</span> lines</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/mcmc/output_53_0.png" alt="png"></p>
+<h2 id="Animating-Metropolis-Hastings"><a href="#Animating-Metropolis-Hastings" class="headerlink" title="Animating Metropolis-Hastings"></a>Animating Metropolis-Hastings</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> pm.Model() <span class="keyword">as</span> logistic_model:</span><br><span class="line">    <span class="comment"># Again define Bayesian logistic regression model on the following features: sex, age, age_squared, educ, hours</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#### YOUR CODE HERE ####</span></span><br><span class="line">    data[<span class="string">'age_2'</span>] = data[<span class="string">'age'</span>]^<span class="number">2</span></span><br><span class="line">    pm.glm.GLM.from_formula(<span class="string">'income_more_50K ~ sex + age + educ + hours + age_2'</span>, data=data, family=<span class="string">'binomial'</span>)</span><br><span class="line">    <span class="comment">### END OF YOUR CODE ###</span></span><br><span class="line">    step = pm.Metropolis()</span><br><span class="line">    iter_sample = pm.iter_sample(<span class="number">2</span> * samples, step, start=map_estimate)</span><br><span class="line">anim = animation.FuncAnimation(fig, animate, init_func=init,</span><br><span class="line">                               frames=samples, interval=<span class="number">5</span>, blit=<span class="keyword">True</span>)</span><br><span class="line">HTML(anim.to_html5_video())</span><br><span class="line"><span class="comment"># Note that generating the video may take a while.</span></span><br></pre></td></tr></table></figure>
+<h2 id="Animating-NUTS"><a href="#Animating-NUTS" class="headerlink" title="Animating NUTS"></a>Animating NUTS</h2><p>Now rerun the animation providing the NUTS sampling method as the step argument.</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#bayesian methods">
+    <span class="tag-code">bayesian methods</span>
+  </a>
+
+  <a href="/tags#MCMC">
+    <span class="tag-code">MCMC</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/12/31/bayesian-methods-em/">
+        <span class="nav-arrow">← </span>
+        
+          Bayesian Methods EM
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/12/31/bayesian-methods-vae/">
+        
+          Bayesian Methods VAE
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Using-PyMC3"><span class="toc-nav-text">Using PyMC3</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Installation"><span class="toc-nav-text">Installation</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Grading"><span class="toc-nav-text">Grading</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Task-1-Alice-and-Bob"><span class="toc-nav-text">Task 1. Alice and Bob</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-1-1"><span class="toc-nav-text">Task 1.1</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-1-2"><span class="toc-nav-text">Task 1.2</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-1-3"><span class="toc-nav-text">Task 1.3</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-1-4"><span class="toc-nav-text">Task 1.4</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Task-2-Logistic-regression-with-PyMC3"><span class="toc-nav-text">Task 2. Logistic regression with PyMC3</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Logistic-regression"><span class="toc-nav-text">Logistic regression.</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Odds-ratio"><span class="toc-nav-text">Odds ratio.</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Credible-interval"><span class="toc-nav-text">Credible interval</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-2-1-MAP-inference"><span class="toc-nav-text">Task 2.1 MAP inference</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-2-2-MCMC"><span class="toc-nav-text">Task 2.2 MCMC</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Metropolis-Hastings"><span class="toc-nav-text">Metropolis-Hastings</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#NUTS-sampler"><span class="toc-nav-text">NUTS sampler</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Estimating-the-odds-ratio"><span class="toc-nav-text">Estimating the odds ratio</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Task-2-3-interpreting-the-results"><span class="toc-nav-text">Task 2.3 interpreting the results</span></a></li></ol></li></ol><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Authorization-amp-Submission"><span class="toc-nav-text">Authorization &amp; Submission</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Optional-generating-videos-of-sampling-process"><span class="toc-nav-text">(Optional) generating videos of sampling process</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Setting-things-up"><span class="toc-nav-text">Setting things up</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Animating-Metropolis-Hastings"><span class="toc-nav-text">Animating Metropolis-Hastings</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Animating-NUTS"><span class="toc-nav-text">Animating NUTS</span></a></li></ol></li>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2018/12/31/bayesian-methods-mcmc/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "dongnanzhy";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Bayesian Methods MCMC",
+        owner: "dongnanzhy",
+        repo: "dongnanzhy.github.io",
+        oauth: {
+          client_id: "6e8efba4b92de298d180",
+          client_secret: "ef25328fb6ac8348ad6921d892776be451db3639"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'http://yoursite.com/2018/12/31/bayesian-methods-mcmc/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

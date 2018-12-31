@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Yan&#39;s git io">
+  <meta name="keyword" content="YAN&#39;s BLOG">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Bayesian Methods VAE | YAN&#39;s BLOG
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>YAN's BLOG</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Bayesian Methods VAE</h2>
+  <p class="post-date">2018-12-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Variational-Autoencoder"><a href="#Variational-Autoencoder" class="headerlink" title="Variational Autoencoder"></a>Variational Autoencoder</h1><p>In this assignment, you will build Variational Autoencoder, train it on the MNIST dataset, and play with its architecture and hyperparameters.</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>You will need <figure class="highlight plain"><figcaption><span>```tensorflow```, ```keras```, ```matplotlib``` libraries for this assignment</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">import tensorflow as tf</span><br><span class="line">import keras</span><br><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line">from keras.layers import Input, Dense, Lambda, InputLayer, concatenate</span><br><span class="line">from keras.models import Model, Sequential</span><br><span class="line">from keras import backend as K</span><br><span class="line">from keras import metrics</span><br><span class="line">from keras.datasets import mnist</span><br><span class="line">from keras.utils import np_utils</span><br><span class="line">from grader import Grader</span><br></pre></td></tr></table></figure></p>
+<h3 id="Grading"><a href="#Grading" class="headerlink" title="Grading"></a>Grading</h3><p>We will create a grader instance below and use it to collect your answers. Note that these outputs will be stored locally inside grader and will be uploaded to the platform only after running submit function in the last part of this assignment. If you want to make a partial submission, you can run that cell anytime you want.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader = Grader()</span><br></pre></td></tr></table></figure>
+<h3 id="Variational-Autoencoder-1"><a href="#Variational-Autoencoder-1" class="headerlink" title="Variational Autoencoder"></a>Variational Autoencoder</h3><p>Recall that Variational Autoencoder is a probabilistic model of data based on a continious mixture of distributions. In the lecture we covered the mixture of gaussians case, but here we will apply VAE to binary MNIST images (each pixel is either black or white). To better model binary data we will use a <strong>continuous mixture of binomial distributions</strong>(正常情况下是continuous mixture of gaussian distribution. 表达式一样，主要体现在reconstruction error 上): $p(x \mid w) = \int p(x \mid t, w) p(t) dt$, where the prior distribution on the latent code $t$ is standard normal $p(t) = \mathcal{N}(0, I)$, but probability that $(i, j)$-th pixel is black equals to $(i, j)$-th output of the decoder neural detwork: $p(x_{i, j} \mid t, w) = \text{decoder}(t, w)_{i, j}$.</p>
+<p>To train this model we would like to maximize marginal log-likelihood of our dataset $\max_w \log p(X \mid w)$, but it’s very hard to do computationally, so instead we maximize the Variational Lower Bound w.r.t. both the original parameters $w$ and variational distribution $q$ which we define as encoder neural network with parameters $\phi$ which takes input image $x$ and outputs parameters of the gaussian distribution $q(t \mid x, \phi)$: $\log p(X \mid w) \geq \mathcal{L}(w, \phi) \rightarrow \max_{w, \phi}$.</p>
+<p><strong>注意：这里有三个概念：likelihood, prior 和 variational. Likelihood是$p(X \mid w)$，即我们最后要maximize的。Prior是standard normal $p(t) = \mathcal{N}(0, I)$。Posterior即$p(t \mid x)$。 Variance是我们用encoder模拟的Prior即$q(t \mid x, \phi)$</strong></p>
+<p>So overall our model looks as follows: encoder takes an image $x$, produces a distribution over latent codes $q(t \mid x)$ which should approximate the posterior distribution $p(t \mid x)$ (at least after training), samples a point from this distribution $\widehat{t} \sim q(t \mid x, \phi)$, and finally feeds it into a decoder that outputs a distribution over images.</p>
+<p><img src="/images/bayesian_methods/vae/VAE.png" alt=""></p>
+<p>In the lecture, we also discussed that variational lower bound has an expected value inside which we are going to approximate with sampling. But it is not trivial since we need to differentiate through this approximation. However, we learned about <strong><em>reparametrization trick</em></strong> which suggests instead of sampling from distribution $\widehat{t} \sim q(t \mid x, \phi)$ sample from a distribution which doesn’t depend on any parameters, e.g. standard normal, and then deterministically transform this sample to the desired one: $\varepsilon \sim \mathcal{N}(0, I); ~~\widehat{t} = m(x, \phi) + \varepsilon \sigma(x, \phi)$. This way we don’t have to worry about our stochastic gradient being biased and can straightforwardly differentiate our loss w.r.t. all the parameters while treating the current sample $\varepsilon$ as constant.</p>
+<h3 id="Variational-Lower-Bound"><a href="#Variational-Lower-Bound" class="headerlink" title="Variational Lower Bound"></a>Variational Lower Bound</h3><p><strong>Task 1</strong> Derive and implement Variational Lower Bound for the continuous mixture of Binomial distributions.</p>
+<p><strong>Note</strong> that to pass the test, your code should work with any mini-batch size.</p>
+<p><strong>Also note</strong> that although we need a stochastic estimate of VLB:<br>$$\text{VLB} = \sum_{i=1}^N \text{VLB}<em>i \approx \frac{N}{M}\sum</em>{i_s}^M \text{VLB}_{i_s}$$<br>where $N$ is the dataset size, $\text{VLB}<em>i$ is the term of VLB corresponding to the $i$-th object, and $M$ is the mini-batch size; in the function below you need to return just average across the mini-batch $\frac{1}{M}\sum</em>{i_s}^M \text{VLB}_{i_s}$. People usually optimize this unscaled version of VLB since it doesn’t depend on the dataset set size - you can write VLB function once and use it for different datasets - and it doesn’t affect optimization (it does affect the learning rate though). The correct value for this unscaled VLB should be around $100 - 170$.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">vlb_binomial</span><span class="params">(x, x_decoded_mean, t_mean, t_log_var)</span>:</span></span><br><span class="line">    <span class="string">"""Returns the value of Variational Lower Bound</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    The inputs are tf.Tensor</span></span><br><span class="line"><span class="string">        x: (batch_size x number_of_pixels) matrix with one image per row with zeros and ones</span></span><br><span class="line"><span class="string">        x_decoded_mean: (batch_size x number_of_pixels) mean of the distribution p(x | t), real numbers from 0 to 1</span></span><br><span class="line"><span class="string">        t_mean: (batch_size x latent_dim) mean vector of the (normal) distribution q(t | x)</span></span><br><span class="line"><span class="string">        t_log_var: (batch_size x latent_dim) logarithm of the variance vector of the (normal) distribution q(t | x)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        A tf.Tensor with one element (averaged across the batch), VLB</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment">### YOUR CODE HERE</span></span><br><span class="line">    <span class="comment">## vlb is the loss function, having reconstruction error and kl divergence</span></span><br><span class="line">    <span class="comment">## kl divergence is KL(q||p), w.r.t q is estimated Gaussian, p is Normal Gaussian</span></span><br><span class="line">    kl = tf.reduce_sum((tf.exp(t_log_var) + t_mean**<span class="number">2</span> - t_log_var - <span class="number">1</span>)/<span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="comment">## reconstruction loss uses cross entropy, since it's binary image</span></span><br><span class="line">    reconstruction_loss = -tf.reduce_sum(x*tf.log(x_decoded_mean+<span class="number">1e-8</span>)+(<span class="number">1</span>-x)*tf.log(<span class="number">1</span>-x_decoded_mean+<span class="number">1e-8</span>), <span class="number">1</span>)</span><br><span class="line">    kl = tf.reduce_mean(kl)</span><br><span class="line">    reconstruction_loss = tf.reduce_mean(reconstruction_loss)</span><br><span class="line">    <span class="keyword">return</span> reconstruction_loss + kl</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Start tf session so we can run code.</span></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"><span class="comment"># Connect keras to the created session.</span></span><br><span class="line">K.set_session(sess)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_vlb(sess, vlb_binomial)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1 (vlb) is: 157.59695
+</code></pre><h2 id="Encoder-decoder-definition"><a href="#Encoder-decoder-definition" class="headerlink" title="Encoder / decoder definition"></a>Encoder / decoder definition</h2><p><strong>Task 2</strong> Read the code below that defines encoder and decoder networks and implement sampling with reparametrization trick in the provided space.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">100</span></span><br><span class="line">original_dim = <span class="number">784</span> <span class="comment"># Number of pixels in MNIST images.</span></span><br><span class="line">latent_dim = <span class="number">64</span> <span class="comment"># d, dimensionality of the latent code t.</span></span><br><span class="line">intermediate_dim = <span class="number">256</span> <span class="comment"># Size of the hidden layer.</span></span><br><span class="line">epochs = <span class="number">40</span></span><br><span class="line"></span><br><span class="line">x = Input(batch_shape=(batch_size, original_dim))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_encoder</span><span class="params">(input_dim)</span>:</span></span><br><span class="line">    <span class="comment"># Encoder network.</span></span><br><span class="line">    <span class="comment"># We instantiate these layers separately so as to reuse them later</span></span><br><span class="line">    encoder = Sequential(name=<span class="string">'encoder'</span>)</span><br><span class="line">    encoder.add(InputLayer([input_dim]))</span><br><span class="line">    encoder.add(Dense(intermediate_dim, activation=<span class="string">'relu'</span>))</span><br><span class="line">    encoder.add(Dense(<span class="number">2</span> * latent_dim))</span><br><span class="line">    <span class="keyword">return</span> encoder</span><br><span class="line">encoder = create_encoder(original_dim)</span><br><span class="line"></span><br><span class="line">get_t_mean = Lambda(<span class="keyword">lambda</span> h: h[:, :latent_dim])</span><br><span class="line">get_t_log_var = Lambda(<span class="keyword">lambda</span> h: h[:, latent_dim:])</span><br><span class="line">h = encoder(x)</span><br><span class="line">t_mean = get_t_mean(h)</span><br><span class="line">t_log_var = get_t_log_var(h)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Sampling from the distribution </span></span><br><span class="line"><span class="comment">#     q(t | x) = N(t_mean, exp(t_log_var))</span></span><br><span class="line"><span class="comment"># with reparametrization trick.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sampling</span><span class="params">(args)</span>:</span></span><br><span class="line">    <span class="string">"""Returns sample from a distribution N(args[0], diag(args[1]))</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    The sample should be computed with reparametrization trick.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    The inputs are tf.Tensor</span></span><br><span class="line"><span class="string">        args[0]: (batch_size x latent_dim) mean of the desired distribution</span></span><br><span class="line"><span class="string">        args[1]: (batch_size x latent_dim) logarithm of the variance vector of the desired distribution</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        A tf.Tensor of size (batch_size x latent_dim), the samples.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    t_mean, t_log_var = args</span><br><span class="line">    <span class="comment"># YOUR CODE HERE</span></span><br><span class="line">    <span class="comment">## Use reparametrization trick</span></span><br><span class="line">    epsilon = tf.random_normal(t_mean.shape)</span><br><span class="line">    z = epsilon * tf.exp(<span class="number">0.5</span> * t_log_var) + t_mean</span><br><span class="line">    <span class="keyword">return</span> z</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">t = Lambda(sampling)([t_mean, t_log_var])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_decoder</span><span class="params">(input_dim)</span>:</span></span><br><span class="line">    <span class="comment"># Decoder network</span></span><br><span class="line">    <span class="comment"># We instantiate these layers separately so as to reuse them later</span></span><br><span class="line">    decoder = Sequential(name=<span class="string">'decoder'</span>)</span><br><span class="line">    decoder.add(InputLayer([input_dim]))</span><br><span class="line">    decoder.add(Dense(intermediate_dim, activation=<span class="string">'relu'</span>))</span><br><span class="line">    decoder.add(Dense(original_dim, activation=<span class="string">'sigmoid'</span>))</span><br><span class="line">    <span class="keyword">return</span> decoder</span><br><span class="line">decoder = create_decoder(latent_dim)</span><br><span class="line">x_decoded_mean = decoder(t)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_samples(sess, sampling)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.1 (samples mean) is: -0.118285365
+Current answer for task 2.2 (samples var) is: 0.03759662
+</code></pre><h2 id="Training-the-model"><a href="#Training-the-model" class="headerlink" title="Training the model"></a>Training the model</h2><p><strong>Task 3</strong> Run the cells below to train the model with the default settings. Modify the parameters to get better results. Especially pay attention the encoder / encoder architectures (e.g. using more layers, maybe making them convolutional), learning rate, and the number of epochs.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Note here the lower bound defined before is actually loss (- lower_bound)</span></span><br><span class="line">loss = vlb_binomial(x, x_decoded_mean, t_mean, t_log_var)</span><br><span class="line">vae = Model(x, x_decoded_mean)</span><br><span class="line"><span class="comment"># Keras will provide input (x) and output (x_decoded_mean) to the function that</span></span><br><span class="line"><span class="comment"># should construct loss, but since our function also depends on other</span></span><br><span class="line"><span class="comment"># things (e.g. t_means), it is easier to build the loss in advance and pass</span></span><br><span class="line"><span class="comment"># a function that always returns it.</span></span><br><span class="line">vae.compile(optimizer=keras.optimizers.RMSprop(lr=<span class="number">0.001</span>), loss=<span class="keyword">lambda</span> x, y: loss)</span><br></pre></td></tr></table></figure>
+<h4 id="Load-and-prepare-the-data"><a href="#Load-and-prepare-the-data" class="headerlink" title="Load and prepare the data"></a>Load and prepare the data</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># train the VAE on MNIST digits</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># One hot encoding.</span></span><br><span class="line"><span class="comment">## y_train, y_test is class of the image, 0~9. Not used for VAE, used for CVAE</span></span><br><span class="line">y_train = np_utils.to_categorical(y_train)</span><br><span class="line">y_test = np_utils.to_categorical(y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment">## change binary image to continuous input 0~1</span></span><br><span class="line">x_train = x_train.astype(<span class="string">'float32'</span>) / <span class="number">255.</span></span><br><span class="line">x_test = x_test.astype(<span class="string">'float32'</span>) / <span class="number">255.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## flatten x_train and x_test</span></span><br><span class="line">x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[<span class="number">1</span>:])))</span><br><span class="line">x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[<span class="number">1</span>:])))</span><br></pre></td></tr></table></figure>
+<h4 id="Train-the-model"><a href="#Train-the-model" class="headerlink" title="Train the model"></a>Train the model</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hist = vae.fit(x=x_train, y=x_train,</span><br><span class="line">               shuffle=<span class="keyword">True</span>,</span><br><span class="line">               epochs=epochs,</span><br><span class="line">               batch_size=batch_size,</span><br><span class="line">               validation_data=(x_test, x_test),</span><br><span class="line">               verbose=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Train on 60000 samples, validate on 10000 samples
+Epoch 1/40
+ - 4s - loss: 162.7900 - val_loss: 138.6159
+Epoch 2/40
+ - 3s - loss: 131.5424 - val_loss: 124.2565
+Epoch 3/40
+ - 3s - loss: 122.4806 - val_loss: 118.1873
+Epoch 4/40
+ - 3s - loss: 117.4147 - val_loss: 115.3841
+Epoch 5/40
+ - 3s - loss: 114.3555 - val_loss: 112.6461
+Epoch 6/40
+ - 3s - loss: 112.4335 - val_loss: 110.8228
+Epoch 7/40
+ - 3s - loss: 111.1243 - val_loss: 109.4895
+Epoch 8/40
+ - 3s - loss: 110.1543 - val_loss: 109.0790
+Epoch 9/40
+ - 3s - loss: 109.5377 - val_loss: 108.8097
+Epoch 10/40
+ - 3s - loss: 109.0028 - val_loss: 108.1919
+Epoch 11/40
+ - 3s - loss: 108.6090 - val_loss: 108.2727
+Epoch 12/40
+ - 3s - loss: 108.2288 - val_loss: 108.0635
+Epoch 13/40
+ - 3s - loss: 107.9554 - val_loss: 107.1368
+Epoch 14/40
+ - 3s - loss: 107.6794 - val_loss: 107.2797
+Epoch 15/40
+ - 3s - loss: 107.4163 - val_loss: 107.0116
+Epoch 16/40
+ - 3s - loss: 107.2714 - val_loss: 106.8392
+Epoch 17/40
+ - 3s - loss: 107.0786 - val_loss: 106.5130
+Epoch 18/40
+ - 3s - loss: 106.9363 - val_loss: 106.5109
+Epoch 19/40
+ - 3s - loss: 106.7659 - val_loss: 106.8130
+Epoch 20/40
+ - 3s - loss: 106.6219 - val_loss: 105.9736
+Epoch 21/40
+ - 3s - loss: 106.5032 - val_loss: 106.2564
+Epoch 22/40
+ - 3s - loss: 106.4050 - val_loss: 106.0565
+Epoch 23/40
+ - 3s - loss: 106.3155 - val_loss: 107.0727
+Epoch 24/40
+ - 3s - loss: 106.1915 - val_loss: 106.0746
+Epoch 25/40
+ - 3s - loss: 106.0905 - val_loss: 105.9534
+Epoch 26/40
+ - 3s - loss: 106.0185 - val_loss: 105.7398
+Epoch 27/40
+ - 3s - loss: 105.9506 - val_loss: 106.0413
+Epoch 28/40
+ - 3s - loss: 105.8656 - val_loss: 105.6316
+Epoch 29/40
+ - 3s - loss: 105.7916 - val_loss: 104.9242
+Epoch 30/40
+ - 3s - loss: 105.6715 - val_loss: 105.2510
+Epoch 31/40
+ - 3s - loss: 105.6575 - val_loss: 105.2133
+Epoch 32/40
+ - 3s - loss: 105.5556 - val_loss: 104.6787
+Epoch 33/40
+ - 3s - loss: 105.4921 - val_loss: 104.8313
+Epoch 34/40
+ - 3s - loss: 105.4479 - val_loss: 105.3083
+Epoch 35/40
+ - 3s - loss: 105.3896 - val_loss: 105.2446
+Epoch 36/40
+ - 3s - loss: 105.3886 - val_loss: 104.5037
+Epoch 37/40
+ - 3s - loss: 105.2930 - val_loss: 105.2558
+Epoch 38/40
+ - 3s - loss: 105.2345 - val_loss: 104.9638
+Epoch 39/40
+ - 3s - loss: 105.2255 - val_loss: 104.9504
+Epoch 40/40
+ - 3s - loss: 105.1552 - val_loss: 104.8775
+</code></pre><h3 id="Visualize-reconstructions-for-train-and-validation-data"><a href="#Visualize-reconstructions-for-train-and-validation-data" class="headerlink" title="Visualize reconstructions for train and validation data"></a>Visualize reconstructions for train and validation data</h3><p>In the picture below you can see the reconstruction ability of your network on training and validation data. In each of the two images, the left column is MNIST images and the right column is the corresponding image after passing through autoencoder (or more precisely the mean of the binomial distribution over the output images).</p>
+<p>Note that getting the best possible reconstruction is not the point of VAE, the KL term of the objective specifically hurts the reconstruction performance. But the reconstruction should be anyway reasonable and they provide a visual debugging tool.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line"><span class="keyword">for</span> fid_idx, (data, title) <span class="keyword">in</span> enumerate(</span><br><span class="line">            zip([x_train, x_test], [<span class="string">'Train'</span>, <span class="string">'Validation'</span>])):</span><br><span class="line">    n = <span class="number">10</span>  <span class="comment"># figure with 10 x 2 digits</span></span><br><span class="line">    digit_size = <span class="number">28</span></span><br><span class="line">    figure = np.zeros((digit_size * n, digit_size * <span class="number">2</span>))</span><br><span class="line">    decoded = sess.run(x_decoded_mean, feed_dict=&#123;x: data[:batch_size, :]&#125;)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        figure[i * digit_size: (i + <span class="number">1</span>) * digit_size,</span><br><span class="line">               :digit_size] = data[i, :].reshape(digit_size, digit_size)</span><br><span class="line">        figure[i * digit_size: (i + <span class="number">1</span>) * digit_size,</span><br><span class="line">               digit_size:] = decoded[i, :].reshape(digit_size, digit_size)</span><br><span class="line">    ax = fig.add_subplot(<span class="number">1</span>, <span class="number">2</span>, fid_idx + <span class="number">1</span>)</span><br><span class="line">    ax.imshow(figure, cmap=<span class="string">'Greys_r'</span>)</span><br><span class="line">    ax.set_title(title)</span><br><span class="line">    ax.axis(<span class="string">'off'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/vae/output_26_0.png" alt="png"></p>
+<h3 id="Sending-the-results-of-your-best-model-as-Task-3-submission"><a href="#Sending-the-results-of-your-best-model-as-Task-3-submission" class="headerlink" title="Sending the results of your best model as Task 3 submission"></a>Sending the results of your best model as Task 3 submission</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_best_val_loss(hist)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 3 (best val loss) is: 104.87750022888184
+</code></pre><h2 id="Hallucinating-new-data"><a href="#Hallucinating-new-data" class="headerlink" title="Hallucinating new data"></a>Hallucinating new data</h2><p><strong>Task 4</strong> Write code to generate new samples of images from your trained VAE. To do that you have to sample from the prior distribution $p(t)$ and then from the likelihood $p(x \mid t)$.</p>
+<p><strong>Note</strong> that the sampling you’ve written in Task 2 was for the variational distribution $q(t \mid x)$, while here you need to sample from the prior.</p>
+<p><strong>这里注意！sample是从prior sample，而prior sample是 Normal Gaussian</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n_samples = <span class="number">10</span>  <span class="comment"># To pass automatic grading please use at least 2 samples here.</span></span><br><span class="line"><span class="comment"># YOUR CODE HERE.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sampled_im_mean is a tf.Tensor of size 10 x 784 with 10 random</span></span><br><span class="line"><span class="comment"># images sampled from the vae model.</span></span><br><span class="line">z = tf.random_normal((n_samples, latent_dim))</span><br><span class="line">sampled_im_mean = decoder(z)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sampled_im_mean_np = sess.run(sampled_im_mean)</span><br><span class="line"><span class="comment"># Show the sampled images.</span></span><br><span class="line">plt.figure()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(n_samples):</span><br><span class="line">    ax = plt.subplot(n_samples // <span class="number">5</span> + <span class="number">1</span>, <span class="number">5</span>, i + <span class="number">1</span>)</span><br><span class="line">    plt.imshow(sampled_im_mean_np[i, :].reshape(<span class="number">28</span>, <span class="number">28</span>), cmap=<span class="string">'gray'</span>)</span><br><span class="line">    ax.axis(<span class="string">'off'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/vae/output_31_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_hallucinating(sess, sampled_im_mean)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 4.1 (hallucinating mean) is: 0.10742197
+Current answer for task 4.2 (hallucinating var) is: 0.18451297
+</code></pre><h1 id="Conditional-VAE"><a href="#Conditional-VAE" class="headerlink" title="Conditional VAE"></a>Conditional VAE</h1><p>In the final task, you will modify your code to obtain Conditional Variational Autoencoder [1]. The idea is very simple: to be able to control the samples you generate, we condition all the distributions on some additional information. In our case, this additional information will be the class label (the digit on the image, from 0 to 9).</p>
+<p><img src="/images/bayesian_methods/vae/CVAE.png" alt=""></p>
+<p>So now both the likelihood and the variational distributions are conditioned on the class label: $p(x \mid t, \text{label}, w)$, $q(t \mid x, \text{label}, \phi)$.</p>
+<p>The only thing you have to change in your code is to concatenate input image $x$ with (one-hot) label of this image to pass into the encoder $q$ and to concatenate latent code $t$ with the same label to pass into the decoder $p$. Note that it’s slightly harder to do with convolutional encoder / decoder model.</p>
+<p>[1] Sohn, Kihyuk, Honglak Lee, and Xinchen Yan. “Learning Structured Output Representation using Deep Conditional Generative Models.” Advances in Neural Information Processing Systems. 2015.</p>
+<h2 id="Final-task"><a href="#Final-task" class="headerlink" title="Final task"></a>Final task</h2><p><strong>Task 5.1</strong> Implement CVAE model. You may reuse <figure class="highlight plain"><figcaption><span>and ```create_decoder``` modules defined previously (now you can see why they accept the input size as an argument ;) ). You may also need `concatenate` Keras layer to concat labels with input data and latent code.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">To finish this task, you should go to `Conditionally hallucinate data` section and find there Task 5.2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line"># One-hot labels placeholder.</span><br><span class="line">x = Input(batch_shape=(batch_size, original_dim))</span><br><span class="line">label = Input(batch_shape=(batch_size, 10))</span><br><span class="line"></span><br><span class="line"># YOUR CODE HERE</span><br><span class="line">cond_encoder = create_encoder(original_dim + 10)</span><br><span class="line"></span><br><span class="line"># get_t_mean = Lambda(lambda h: h[:, :latent_dim])</span><br><span class="line"># get_t_log_var = Lambda(lambda h: h[:, latent_dim:])</span><br><span class="line">cond_h = cond_encoder(concatenate([x, label]))</span><br><span class="line">cond_t_mean = get_t_mean(cond_h)</span><br><span class="line">cond_t_log_var = get_t_log_var(cond_h)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">t = Lambda(sampling)([cond_t_mean, cond_t_log_var])</span><br><span class="line"></span><br><span class="line">cond_decoder = create_decoder(latent_dim + 10)</span><br><span class="line">cond_x_decoded_mean = cond_decoder(concatenate([t, label]))</span><br></pre></td></tr></table></figure></p>
+<h2 id="Define-the-loss-and-the-model"><a href="#Define-the-loss-and-the-model" class="headerlink" title="Define the loss and the model"></a>Define the loss and the model</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conditional_loss = vlb_binomial(x, cond_x_decoded_mean, cond_t_mean, cond_t_log_var)</span><br><span class="line">cvae = Model([x, label], cond_x_decoded_mean)</span><br><span class="line">cvae.compile(optimizer=keras.optimizers.RMSprop(lr=<span class="number">0.001</span>), loss=<span class="keyword">lambda</span> x, y: conditional_loss)</span><br></pre></td></tr></table></figure>
+<h3 id="Train-the-model-1"><a href="#Train-the-model-1" class="headerlink" title="Train the model"></a>Train the model</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hist = cvae.fit(x=[x_train, y_train],</span><br><span class="line">                y=x_train,</span><br><span class="line">                shuffle=<span class="keyword">True</span>,</span><br><span class="line">                epochs=epochs,</span><br><span class="line">                batch_size=batch_size,</span><br><span class="line">                validation_data=([x_test, y_test], x_test),</span><br><span class="line">                verbose=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Train on 60000 samples, validate on 10000 samples
+Epoch 1/40
+ - 4s - loss: 160.0676 - val_loss: 133.8433
+Epoch 2/40
+ - 4s - loss: 128.0758 - val_loss: 122.0311
+Epoch 3/40
+ - 4s - loss: 118.6988 - val_loss: 115.4986
+Epoch 4/40
+ - 4s - loss: 113.6957 - val_loss: 110.6210
+Epoch 5/40
+ - 4s - loss: 110.7541 - val_loss: 109.4086
+Epoch 6/40
+ - 4s - loss: 108.8539 - val_loss: 106.9255
+Epoch 7/40
+ - 4s - loss: 107.4996 - val_loss: 105.8797
+Epoch 8/40
+ - 4s - loss: 106.6003 - val_loss: 105.6026
+Epoch 9/40
+ - 4s - loss: 105.7587 - val_loss: 106.0383
+Epoch 10/40
+ - 4s - loss: 105.1994 - val_loss: 105.1134
+Epoch 11/40
+ - 4s - loss: 104.7207 - val_loss: 103.5558
+Epoch 12/40
+ - 4s - loss: 104.2589 - val_loss: 103.2119
+Epoch 13/40
+ - 4s - loss: 103.9110 - val_loss: 103.2548
+Epoch 14/40
+ - 4s - loss: 103.5644 - val_loss: 102.4616
+Epoch 15/40
+ - 4s - loss: 103.2869 - val_loss: 103.0862
+Epoch 16/40
+ - 4s - loss: 103.0542 - val_loss: 102.2632
+Epoch 17/40
+ - 4s - loss: 102.8694 - val_loss: 102.1227
+Epoch 18/40
+ - 4s - loss: 102.6723 - val_loss: 102.1841
+Epoch 19/40
+ - 4s - loss: 102.4552 - val_loss: 101.9109
+Epoch 20/40
+ - 4s - loss: 102.3108 - val_loss: 102.6435
+Epoch 21/40
+ - 4s - loss: 102.1548 - val_loss: 102.3394
+Epoch 22/40
+ - 4s - loss: 101.9564 - val_loss: 101.4016
+Epoch 23/40
+ - 4s - loss: 101.8731 - val_loss: 102.0562
+Epoch 24/40
+ - 4s - loss: 101.7377 - val_loss: 102.8159
+Epoch 25/40
+ - 4s - loss: 101.6051 - val_loss: 101.0873
+Epoch 26/40
+ - 4s - loss: 101.5291 - val_loss: 100.6189
+Epoch 27/40
+ - 4s - loss: 101.3765 - val_loss: 101.9504
+Epoch 28/40
+ - 4s - loss: 101.3285 - val_loss: 101.1729
+Epoch 29/40
+ - 4s - loss: 101.1974 - val_loss: 101.2699
+Epoch 30/40
+ - 4s - loss: 101.0955 - val_loss: 101.3118
+Epoch 31/40
+ - 4s - loss: 100.9785 - val_loss: 101.4562
+Epoch 32/40
+ - 4s - loss: 100.9389 - val_loss: 100.6755
+Epoch 33/40
+ - 4s - loss: 100.8765 - val_loss: 100.1449
+Epoch 34/40
+ - 4s - loss: 100.7750 - val_loss: 102.4070
+Epoch 35/40
+ - 4s - loss: 100.7393 - val_loss: 100.7936
+Epoch 36/40
+ - 4s - loss: 100.6984 - val_loss: 100.2737
+Epoch 37/40
+ - 4s - loss: 100.6426 - val_loss: 100.4940
+Epoch 38/40
+ - 4s - loss: 100.5590 - val_loss: 100.5555
+Epoch 39/40
+ - 4s - loss: 100.4930 - val_loss: 100.2847
+Epoch 40/40
+ - 4s - loss: 100.4308 - val_loss: 100.0369
+</code></pre><h3 id="Visualize-reconstructions-for-train-and-validation-data-1"><a href="#Visualize-reconstructions-for-train-and-validation-data-1" class="headerlink" title="Visualize reconstructions for train and validation data"></a>Visualize reconstructions for train and validation data</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line"><span class="keyword">for</span> fid_idx, (x_data, y_data, title) <span class="keyword">in</span> enumerate(</span><br><span class="line">            zip([x_train, x_test], [y_train, y_test], [<span class="string">'Train'</span>, <span class="string">'Validation'</span>])):</span><br><span class="line">    n = <span class="number">10</span>  <span class="comment"># figure with 10 x 2 digits</span></span><br><span class="line">    digit_size = <span class="number">28</span></span><br><span class="line">    figure = np.zeros((digit_size * n, digit_size * <span class="number">2</span>))</span><br><span class="line">    decoded = sess.run(cond_x_decoded_mean,</span><br><span class="line">                       feed_dict=&#123;x: x_data[:batch_size, :],</span><br><span class="line">                                  label: y_data[:batch_size, :]&#125;)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        figure[i * digit_size: (i + <span class="number">1</span>) * digit_size,</span><br><span class="line">               :digit_size] = x_data[i, :].reshape(digit_size, digit_size)</span><br><span class="line">        figure[i * digit_size: (i + <span class="number">1</span>) * digit_size,</span><br><span class="line">               digit_size:] = decoded[i, :].reshape(digit_size, digit_size)</span><br><span class="line">    ax = fig.add_subplot(<span class="number">1</span>, <span class="number">2</span>, fid_idx + <span class="number">1</span>)</span><br><span class="line">    ax.imshow(figure, cmap=<span class="string">'Greys_r'</span>)</span><br><span class="line">    ax.set_title(title)</span><br><span class="line">    ax.axis(<span class="string">'off'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/vae/output_43_0.png" alt="png"></p>
+<h2 id="Conditionally-hallucinate-data"><a href="#Conditionally-hallucinate-data" class="headerlink" title="Conditionally hallucinate data"></a>Conditionally hallucinate data</h2><p><strong>Task 5.2</strong> Implement the conditional sampling from the distribution $p(x \mid t, \text{label})$ by firstly sampling from the prior $p(t)$ and then sampling from the likelihood $p(x \mid t, \text{label})$.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Prepare one hot labels of form</span></span><br><span class="line"><span class="comment">#   0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 ...</span></span><br><span class="line"><span class="comment"># to sample five zeros, five ones, etc</span></span><br><span class="line">curr_labels = np.eye(<span class="number">10</span>)</span><br><span class="line">curr_labels = np.repeat(curr_labels, <span class="number">5</span>, axis=<span class="number">0</span>)  <span class="comment"># Its shape is 50 x 10.</span></span><br><span class="line"><span class="comment"># YOUR CODE HERE.</span></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"><span class="comment"># cond_sampled_im_mean is a tf.Tensor of size 50 x 784 with 5 random zeros,</span></span><br><span class="line"><span class="comment"># then 5 random ones, etc sampled from the cvae model.</span></span><br><span class="line">tensor_labels=tf.convert_to_tensor(curr_labels,dtype=tf.float32)</span><br><span class="line">z = tf.random_normal((<span class="number">50</span>, latent_dim))</span><br><span class="line">cond_sampled_im_mean = cond_decoder(concatenate([z, tensor_labels]))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cond_sampled_im_mean_np = sess.run(cond_sampled_im_mean)</span><br><span class="line"><span class="comment"># Show the sampled images.</span></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">global_idx = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> digit <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">        ax = plt.subplot(<span class="number">10</span>, <span class="number">5</span>, global_idx + <span class="number">1</span>)</span><br><span class="line">        plt.imshow(cond_sampled_im_mean_np[global_idx, :].reshape(<span class="number">28</span>, <span class="number">28</span>), cmap=<span class="string">'gray'</span>)</span><br><span class="line">        ax.axis(<span class="string">'off'</span>)</span><br><span class="line">        global_idx += <span class="number">1</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/vae/output_46_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Submit Task 5 (both 5.1 and 5.2).</span></span><br><span class="line">grader.submit_conditional_hallucinating(sess, cond_sampled_im_mean)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 5.1 (conditional hallucinating mean) is: 0.09869497077779138
+Current answer for task 5.2 (conditional hallucinating var) is: 0.04790131456509189
+</code></pre><h1 id="Authorization-amp-Submission"><a href="#Authorization-amp-Submission" class="headerlink" title="Authorization &amp; Submission"></a>Authorization &amp; Submission</h1><p>To submit assignment parts to Cousera platform, please, enter your e-mail and token into variables below. You can generate the token on this programming assignment page. <b>Note:</b> Token expires 30 minutes after generation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">STUDENT_EMAIL = <span class="string">''</span><span class="comment"># EMAIL HERE</span></span><br><span class="line">STUDENT_TOKEN =  <span class="string">''</span> <span class="comment"># TOKEN HERE</span></span><br><span class="line">grader.status()</span><br></pre></td></tr></table></figure>
+<pre><code>You want to submit these numbers:
+Task 1 (vlb): 157.59695
+Task 2.1 (samples mean): -0.118285365
+Task 2.2 (samples var): 0.03759662
+Task 3 (best val loss): 104.87750022888184
+Task 4.1 (hallucinating mean): 0.10742197
+Task 4.2 (hallucinating var): 0.18451297
+Task 5.1 (conditional hallucinating mean): 0.09869497077779138
+Task 5.2 (conditional hallucinating var): 0.04790131456509189
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit(STUDENT_EMAIL, STUDENT_TOKEN)</span><br></pre></td></tr></table></figure>
+<pre><code>Submitted to Coursera platform. See results on assignment page!
+</code></pre><h1 id="Playtime-UNGRADED"><a href="#Playtime-UNGRADED" class="headerlink" title="Playtime (UNGRADED)"></a>Playtime (UNGRADED)</h1><p>Once you passed all the tests, modify the code below to work with the mixture of Gaussian distributions (in contrast to the mixture of Binomial distributions), and redo the experiments with CIFAR-10 dataset, which are much full color natural images.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.datasets <span class="keyword">import</span> cifar10</span><br><span class="line">(x_train, y_train), (x_test, y_test) = cifar10.load_data()</span><br></pre></td></tr></table></figure>
+<pre><code>Downloading data from https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+170500096/170498071 [==============================] - 24s 0us/step
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(x_train[<span class="number">7</span>, :])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/vae/output_53_0.png" alt="png"></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#bayesian-methods">
+    <span class="tag-code">bayesian-methods</span>
+  </a>
+
+  <a href="/tags#VAE">
+    <span class="tag-code">VAE</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/12/31/bayesian-methods-mcmc/">
+        <span class="nav-arrow">← </span>
+        
+          Bayesian Methods MCMC
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/12/31/bayesian-methods-gp/">
+        
+          Bayesian Methods GP
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Variational-Autoencoder"><span class="toc-nav-text">Variational Autoencoder</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Installation"><span class="toc-nav-text">Installation</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Grading"><span class="toc-nav-text">Grading</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Variational-Autoencoder-1"><span class="toc-nav-text">Variational Autoencoder</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Variational-Lower-Bound"><span class="toc-nav-text">Variational Lower Bound</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Encoder-decoder-definition"><span class="toc-nav-text">Encoder / decoder definition</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Training-the-model"><span class="toc-nav-text">Training the model</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Load-and-prepare-the-data"><span class="toc-nav-text">Load and prepare the data</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Train-the-model"><span class="toc-nav-text">Train the model</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Visualize-reconstructions-for-train-and-validation-data"><span class="toc-nav-text">Visualize reconstructions for train and validation data</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Sending-the-results-of-your-best-model-as-Task-3-submission"><span class="toc-nav-text">Sending the results of your best model as Task 3 submission</span></a></li></ol><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Hallucinating-new-data"><span class="toc-nav-text">Hallucinating new data</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Conditional-VAE"><span class="toc-nav-text">Conditional VAE</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Final-task"><span class="toc-nav-text">Final task</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Define-the-loss-and-the-model"><span class="toc-nav-text">Define the loss and the model</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Train-the-model-1"><span class="toc-nav-text">Train the model</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Visualize-reconstructions-for-train-and-validation-data-1"><span class="toc-nav-text">Visualize reconstructions for train and validation data</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Conditionally-hallucinate-data"><span class="toc-nav-text">Conditionally hallucinate data</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Authorization-amp-Submission"><span class="toc-nav-text">Authorization &amp; Submission</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Playtime-UNGRADED"><span class="toc-nav-text">Playtime (UNGRADED)</span></a></li>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2018/12/31/bayesian-methods-vae/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "dongnanzhy";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Bayesian Methods VAE",
+        owner: "dongnanzhy",
+        repo: "dongnanzhy.github.io",
+        oauth: {
+          client_id: "6e8efba4b92de298d180",
+          client_secret: "ef25328fb6ac8348ad6921d892776be451db3639"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'http://yoursite.com/2018/12/31/bayesian-methods-vae/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

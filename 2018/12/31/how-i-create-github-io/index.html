@@ -10,7 +10,7 @@
   
   <title>
     
-      Hello World | YAN&#39;s BLOG
+      How to create Github IO blog | YAN&#39;s BLOG
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -138,8 +138,8 @@
 </header>
 
     <div id="article-banner">
-  <h2>Hello World</h2>
-  <p class="post-date">2018-12-30</p>
+  <h2>How to create Github IO blog</h2>
+  <p class="post-date">2018-12-31</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -147,15 +147,21 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+    <section class="markdown-content"><h2 id="Create-github-io-repo"><a href="#Create-github-io-repo" class="headerlink" title="Create github io repo"></a>Create github io repo</h2><p><a href="https://pages.github.com/" target="_blank" rel="noopener">Github</a> provides free host for the blog. Simply follow instructions to create a repository naming <username>.github.io</username></p>
+<h2 id="Get-Hexo-Ready"><a href="#Get-Hexo-Ready" class="headerlink" title="Get Hexo Ready"></a>Get Hexo Ready</h2><p>I used <a href="https://hexo.io/docs/writing" target="_blank" rel="noopener">Hexo</a>, which is a simple static blog framework built on Node.js, to create my pages. You can also use <a href="https://jekyllrb.com/" target="_blank" rel="noopener">JekyII</a> as recommended by github. </p>
+<h3 id="Intall-Hexo"><a href="#Intall-Hexo" class="headerlink" title="Intall Hexo"></a>Intall Hexo</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<h3 id="Initialize-Hexo-blog-under"><a href="#Initialize-Hexo-blog-under" class="headerlink" title="Initialize Hexo blog under "></a>Initialize Hexo blog under <my-blog-folder></my-blog-folder></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;my-blog-folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;my-blog-folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<h3 id="Find-a-theme-I-used-a-Vue-style-one-by-yanm1ng"><a href="#Find-a-theme-I-used-a-Vue-style-one-by-yanm1ng" class="headerlink" title="Find a theme, I used a Vue style one by yanm1ng"></a>Find a <a href="https://hexo.io/themes/" target="_blank" rel="noopener">theme</a>, I used a Vue style one by <a href="https://github.com/yanm1ng/hexo-theme-vexo" target="_blank" rel="noopener">yanm1ng</a></h3><ol>
+<li><p>Download theme <my-blog-folder>/theme</my-blog-folder></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> &lt;my-blog-folder&gt;</span><br><span class="line">$ git <span class="built_in">clone</span> &lt;theme-git-repo&gt; themes/&lt;theme-name&gt;</span><br><span class="line">$ cp -R themes/&lt;theme-name&gt;/_source/* <span class="built_in">source</span>/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Update project _config.yml theme config</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">themes:</span> <span class="string">&lt;theme-name&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="Deploy-to-your-github-io-repo"><a href="#Deploy-to-your-github-io-repo" class="headerlink" title="Deploy to your github io repo"></a>Deploy to your github io repo</h2><h3 id="Install-hexo-git-deployer"><a href="#Install-hexo-git-deployer" class="headerlink" title="Install hexo-git-deployer"></a>Install hexo-git-deployer</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<h3 id="Edit-config-yml"><a href="#Edit-config-yml" class="headerlink" title="Edit _config.yml"></a>Edit _config.yml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="attr">https://github.com/dongnanzhy/dongnanzhy.github.io</span></span><br></pre></td></tr></table></figure>
+<h3 id="Deploy"><a href="#Deploy" class="headerlink" title="Deploy"></a>Deploy</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     
@@ -166,6 +172,10 @@
     <span class="tag-code">Hexo</span>
   </a>
 
+  <a href="/tags#github.io">
+    <span class="tag-code">github.io</span>
+  </a>
+
       </div>
     
     <!-- Tags END -->
@@ -174,10 +184,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-    
-      <a class="nav-right" href="/2018/12/31/about-me/">
+      <a class="nav-left" href="/2018/12/31/about-me/">
+        <span class="nav-arrow">← </span>
         
           About Me
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/12/31/pandas-cheetsheet/">
+        
+          Pandas Cheetsheet
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -198,7 +215,7 @@
   <div class="toc-main">
     <strong class="toc-title">Catalog</strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Quick-Start"><span class="toc-nav-text">Quick Start</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Create-a-new-post"><span class="toc-nav-text">Create a new post</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Run-server"><span class="toc-nav-text">Run server</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Generate-static-files"><span class="toc-nav-text">Generate static files</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Deploy-to-remote-sites"><span class="toc-nav-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Create-github-io-repo"><span class="toc-nav-text">Create github io repo</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Get-Hexo-Ready"><span class="toc-nav-text">Get Hexo Ready</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Intall-Hexo"><span class="toc-nav-text">Intall Hexo</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Initialize-Hexo-blog-under"><span class="toc-nav-text">Initialize Hexo blog under </span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Find-a-theme-I-used-a-Vue-style-one-by-yanm1ng"><span class="toc-nav-text">Find a theme, I used a Vue style one by yanm1ng</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Deploy-to-your-github-io-repo"><span class="toc-nav-text">Deploy to your github io repo</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Install-hexo-git-deployer"><span class="toc-nav-text">Install hexo-git-deployer</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Edit-config-yml"><span class="toc-nav-text">Edit _config.yml</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Deploy"><span class="toc-nav-text">Deploy</span></a></li></ol></li></ol>
     
   </div>
 </aside>
@@ -208,7 +225,7 @@
 
 <script>
   (function () {
-    var url = 'http://yoursite.com/2018/12/30/hello-world/';
+    var url = 'http://yoursite.com/2018/12/31/how-i-create-github-io/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -264,7 +281,7 @@
     var gitmentConfig = "dongnanzhy";
     if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
-        id: "Hello World",
+        id: "How to create Github IO blog",
         owner: "dongnanzhy",
         repo: "dongnanzhy.github.io",
         oauth: {
@@ -292,7 +309,7 @@
 <script>
   var disqus_shortname = '';
   
-  var disqus_url = 'http://yoursite.com/2018/12/30/hello-world/';
+  var disqus_url = 'http://yoursite.com/2018/12/31/how-i-create-github-io/';
   
   (function(){
     var dsq = document.createElement('script');

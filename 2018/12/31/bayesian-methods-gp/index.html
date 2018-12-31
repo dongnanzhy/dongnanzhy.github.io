@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Yan&#39;s git io">
+  <meta name="keyword" content="YAN&#39;s BLOG">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Bayesian Methods GP | YAN&#39;s BLOG
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>YAN's BLOG</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Bayesian Methods GP</h2>
+  <p class="post-date">2018-12-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Gaussian-processes-and-Bayesian-optimization"><a href="#Gaussian-processes-and-Bayesian-optimization" class="headerlink" title="Gaussian processes and Bayesian optimization"></a>Gaussian processes and Bayesian optimization</h1><p>In this assignment you will learn how to use <a href="http://sheffieldml.github.io/GPy/" target="_blank" rel="noopener">GPy</a> and <a href="http://sheffieldml.github.io/GPyOpt/" target="_blank" rel="noopener">GPyOpt</a> libraries to deal with gaussian processes. These libraries provide quite simple and inuitive interfaces for training and inference, and we will try to get familiar with them in a few tasks.</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>New libraries that are required for this tasks can be installed with the following command (if you use Anaconda):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install GPy </span><br><span class="line">pip install gpyopt </span><br><span class="line">pip install xgboost</span><br></pre></td></tr></table></figure>
+<p>You can also follow installtaion guides from <a href="https://github.com/SheffieldML/GPy" target="_blank" rel="noopener">GPy</a> and <a href="http://sheffieldml.github.io/GPyOpt/firststeps/index.html" target="_blank" rel="noopener">GPyOpt</a> if you want to build them from source</p>
+<p>You will also need following libraries: <figure class="highlight plain"><figcaption><span>```scikit-learn```, ```matplotlib```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">import numpy as np</span><br><span class="line">import GPy</span><br><span class="line">import GPyOpt</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from sklearn.svm import SVR</span><br><span class="line">import sklearn.datasets</span><br><span class="line">from xgboost import XGBRegressor</span><br><span class="line">from sklearn.cross_validation import cross_val_score</span><br><span class="line">import time</span><br><span class="line">from grader import Grader</span><br><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure></p>
+<pre><code>/home/dongnanzhy/miniconda3/lib/python3.6/site-packages/sklearn/cross_validation.py:41: DeprecationWarning:This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+</code></pre><h3 id="Grading"><a href="#Grading" class="headerlink" title="Grading"></a>Grading</h3><p>We will create a grader instace below and use it to collect your answers. Note that these outputs will be stored locally inside grader and will be uploaded to platform only after running submiting function in the last part of this assignment. If you want to make partial submission, you can run that cell any time you want.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader = Grader()</span><br></pre></td></tr></table></figure>
+<h2 id="Gaussian-processes-GPy-documentation"><a href="#Gaussian-processes-GPy-documentation" class="headerlink" title="Gaussian processes: GPy (documentation)"></a>Gaussian processes: GPy (<a href="http://pythonhosted.org/GPy/" target="_blank" rel="noopener">documentation</a>)</h2><p>We will start with a simple regression problem, for which we will try to fit a Gaussian Process with RBF kernel.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_points</span><span class="params">(n=<span class="number">25</span>, noise_variance=<span class="number">0.0036</span>)</span>:</span></span><br><span class="line">    np.random.seed(<span class="number">777</span>)</span><br><span class="line">    X = np.random.uniform(<span class="number">-3.</span>,<span class="number">3.</span>,(n,<span class="number">1</span>))</span><br><span class="line">    y = np.sin(X) + np.random.randn(n,<span class="number">1</span>)*noise_variance**<span class="number">0.5</span></span><br><span class="line">    <span class="keyword">return</span> X, y</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_noise</span><span class="params">(n=<span class="number">25</span>, noise_variance=<span class="number">0.0036</span>)</span>:</span></span><br><span class="line">    np.random.seed(<span class="number">777</span>)</span><br><span class="line">    X = np.random.uniform(<span class="number">-3.</span>,<span class="number">3.</span>,(n,<span class="number">1</span>))</span><br><span class="line">    y = np.random.randn(n,<span class="number">1</span>)*noise_variance**<span class="number">0.5</span></span><br><span class="line">    <span class="keyword">return</span> X, y</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create data points</span></span><br><span class="line">X, y = generate_points()</span><br><span class="line">plt.plot(X, y, <span class="string">'.'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/gp/output_9_0.png" alt="png"></p>
+<p>To fit a Gaussian Process, you will need to define a kernel. For Gaussian (GBF) kernel you can use <em>GPy.kern.RBF</em><br>function.</p>
+<p><b> Task 1.1: </b> Create RBF kernel with variance 1.5 and length-scale parameter 2 for 1D samples and compute value of the kernel between 6-th and 10-th points (one-based indexing system). Submit a single number.<br><br><b>Hint:</b> use <figure class="highlight plain"><figcaption><span>property of kernel object.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">kernel = GPy.kern.RBF(input_dim=1, variance=1.5, lengthscale=2.) ### YOUR CODE HERE</span><br><span class="line">kernel_59 = kernel.K(X[5].reshape(1,1),X[9].reshape(1,1)) ### YOUR CODE HERE</span><br><span class="line">grader.submit_GPy_1(kernel_59)</span><br></pre></td></tr></table></figure></p>
+<pre><code>Current answer for task 1.1 is: 1.0461813545396959
+</code></pre><p><b> Task 1.2: </b> Fit GP into generated data. Use kernel from previous task. Submit predicted mean and vairance at position $x=1$.<br><br><b>Hint:</b> use <figure class="highlight plain"><figcaption><span>class.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">model = GPy.models.GPRegression(X,y,kernel) ### YOUR CODE HERE</span><br><span class="line">mean,variance = model.predict(np.array([[1]])) ### YOUR CODE HERE</span><br><span class="line">grader.submit_GPy_2(mean, variance)</span><br></pre></td></tr></table></figure></p>
+<pre><code>Current answer for task 1.2 (mean) is: 0.6646774926102937
+Current answer for task 1.2 (variance) is: 1.1001478223790582
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model.plot()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/gp/output_15_0.png" alt="png"></p>
+<p>We see that model didn’t fit the data quite well. Let’s try to fit kernel and noise parameters automatically as discussed in the lecture! You can see current parameters below:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model</span><br></pre></td></tr></table></figure>
+<style type="text/css">
+.pd{
+    font-family: "Courier New", Courier, monospace !important;
+    width: 100%;
+    padding: 3px;
+}
+</style>
+
+<p></p><p class="pd"><br><b>Model</b>: GP regression<br><br><b>Objective</b>: 27.86687636693494<br><br><b>Number of Parameters</b>: 3<br><br><b>Number of Optimization Parameters</b>: 3<br><br><b>Updates</b>: True<br><br></p><p></p>
+<style type="text/css">
+.tg  {font-family:"Courier New", Courier, monospace !important;padding:2px 3px;word-break:normal;border-collapse:collapse;border-spacing:0;border-color:#DCDCDC;margin:0px auto;width:100%;}
+.tg td{font-family:"Courier New", Courier, monospace !important;font-weight:bold;color:#444;background-color:#F7FDFA;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#DCDCDC;}
+.tg th{font-family:"Courier New", Courier, monospace !important;font-weight:normal;color:#fff;background-color:#26ADE4;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#DCDCDC;}
+.tg .tg-left{font-family:"Courier New", Courier, monospace !important;font-weight:normal;text-align:left;}
+.tg .tg-center{font-family:"Courier New", Courier, monospace !important;font-weight:normal;text-align:center;}
+.tg .tg-right{font-family:"Courier New", Courier, monospace !important;font-weight:normal;text-align:right;}
+</style>
+<table class="tg"><tr><th><b>  GP_regression.         </b></th><th><b>value</b></th><th><b>constraints</b></th><th><b>priors</b></th></tr>
+<tr><td class="tg-left">  rbf.variance           </td><td class="tg-right">  1.5</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr>
+<tr><td class="tg-left">  rbf.lengthscale        </td><td class="tg-right">  2.0</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr>
+<tr><td class="tg-left">  Gaussian_noise.variance</td><td class="tg-right">  1.0</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr>
+</table>
+
+
+
+<b> Task 1.3: </b> Optimize length-scale, variance and noise component of the model and submit optimal length-scale value of the kernel. 
+<br><b>Hint:</b> Use <figure class="highlight plain"><figcaption><span>function of the model and ```.lengthscale``` property of the kernel.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">### YOUR CODE HERE</span><br><span class="line">model.optimize()</span><br><span class="line">lengthscale = kernel.lengthscale</span><br><span class="line">grader.submit_GPy_3(lengthscale)</span><br></pre></td></tr></table></figure>
+
+    Current answer for task 1.3 is: 1.625268165035024
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model.plot()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+![png](/images/bayesian_methods/gp/output_20_0.png)
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model</span><br></pre></td></tr></table></figure>
+
+<style type="text/css">
+.pd{
+    font-family: "Courier New", Courier, monospace !important;
+    width: 100%;
+    padding: 3px;
+}
+</style>
+
+<p></p><p class="pd"><br><b>Model</b>: GP regression<br><br><b>Objective</b>: -18.351767754167483<br><br><b>Number of Parameters</b>: 3<br><br><b>Number of Optimization Parameters</b>: 3<br><br><b>Updates</b>: True<br><br></p><p></p>
+<p><style type="text/css"><br>.tg  {font-family:”Courier New”, Courier, monospace !important;padding:2px 3px;word-break:normal;border-collapse:collapse;border-spacing:0;border-color:#DCDCDC;margin:0px auto;width:100%;}<br>.tg td{font-family:”Courier New”, Courier, monospace !important;font-weight:bold;color:#444;background-color:#F7FDFA;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#DCDCDC;}<br>.tg th{font-family:”Courier New”, Courier, monospace !important;font-weight:normal;color:#fff;background-color:#26ADE4;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#DCDCDC;}<br>.tg .tg-left{font-family:”Courier New”, Courier, monospace !important;font-weight:normal;text-align:left;}<br>.tg .tg-center{font-family:”Courier New”, Courier, monospace !important;font-weight:normal;text-align:center;}<br>.tg .tg-right{font-family:”Courier New”, Courier, monospace !important;font-weight:normal;text-align:right;}<br></style></p>
+<table class="tg"><tr><th><b>  GP_regression.         </b></th><th><b>                value</b></th><th><b>constraints</b></th><th><b>priors</b></th></tr><br><tr><td class="tg-left">  rbf.variance           </td><td class="tg-right">   0.7099385192642536</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr><br><tr><td class="tg-left">  rbf.lengthscale        </td><td class="tg-right">    1.625268165035024</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr><br><tr><td class="tg-left">  Gaussian_noise.variance</td><td class="tg-right">0.0038978708233020822</td><td class="tg-center">    +ve    </td><td class="tg-center">      </td></tr><br></table>
+
+
+
+<h3 id="可以看到GP自动optimize出来最初设定的gaussian-noise-variance"><a href="#可以看到GP自动optimize出来最初设定的gaussian-noise-variance" class="headerlink" title="可以看到GP自动optimize出来最初设定的gaussian noise variance"></a>可以看到GP自动optimize出来最初设定的gaussian noise variance</h3><p>As you see, process generates outputs just right. Let’s see if GP can figure out itself when we try to fit it into  noise or signal.</p>
+<p><b> Task 1.4: </b> Generate two datasets: sinusoid wihout noise and samples from gaussian noise. Optimize kernel parameters and submit optimal values of noise component.<br><br><b>Note:</b> generate data only using <figure class="highlight plain"><figcaption><span>noise_variance)``` and ```generate_noise(n, noise_variance)``` function!</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">X, y = generate_noise(noise_variance=10)</span><br><span class="line">### YOUR CODE HERE</span><br><span class="line">kernel = GPy.kern.RBF(1, 1.5, 2)</span><br><span class="line">model = GPy.models.GPRegression(X,y,kernel)</span><br><span class="line">model.optimize()</span><br><span class="line">noise = model.Gaussian_noise.variance</span><br><span class="line">model.plot()</span><br></pre></td></tr></table></figure></p>
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f197c3657f0&gt;
+</code></pre><p><img src="/images/bayesian_methods/gp/output_25_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">X, y = generate_points(noise_variance=<span class="number">0</span>)</span><br><span class="line"><span class="comment">### YOUR CODE HERE</span></span><br><span class="line">kernel = GPy.kern.RBF(<span class="number">1</span>, <span class="number">1.5</span>, <span class="number">2</span>)</span><br><span class="line">model = GPy.models.GPRegression(X,y,kernel)</span><br><span class="line">model.optimize()</span><br><span class="line">just_signal = model.Gaussian_noise.variance</span><br><span class="line">model.plot()</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f197c2ead30&gt;
+</code></pre><p><img src="/images/bayesian_methods/gp/output_26_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_GPy_4(noise, just_signal)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.4 (noise) is: 10.143341903515504
+Current answer for task 1.4 (just signal) is: 8.89286451503942e-16
+</code></pre><h4 id="Sparce-GP"><a href="#Sparce-GP" class="headerlink" title="Sparce GP"></a>Sparce GP</h4><p>Now let’s consider the speed of GP. We will generate a dataset of 3000 points and measure time that is <strong>consumed for prediction</strong> of mean and variance for each point. We will then try to use indusing inputs and find optimal number of points according to quality-time tradeoff.</p>
+<p>For sparse model with inducing points you should use <figure class="highlight plain"><figcaption><span>class. You can set number of inducing inputs with parameter ```num_inducing``` and optimize their positions and values with ```.optimize()``` call.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;b&gt;Task 1.5&lt;/b&gt;: Create a dataset of 1000 points and fit GPRegression. Measure time for predicting mean and variance at position $x=1$. Then fit SparseGPRegression with 10 inducing inputs and repeat the experiment. Report speedup as a ratio between consumed time without and with inducing inputs.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">X, y = generate_points(1000)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### YOUR CODE HERE</span></span><br><span class="line">kernel = GPy.kern.RBF(<span class="number">1</span>, <span class="number">1.5</span>, <span class="number">2</span>)</span><br><span class="line">model = GPy.models.GPRegression(X,y, kernel)</span><br><span class="line">model.optimize()</span><br><span class="line">start = time.time()</span><br><span class="line">mean, variance = model.predict(np.array([[<span class="number">1</span>]]))</span><br><span class="line">time_gp = time.time()-start</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### YOUR CODE HERE</span></span><br><span class="line">kernel = GPy.kern.RBF(<span class="number">1</span>, <span class="number">1.5</span>, <span class="number">2</span>)</span><br><span class="line">model = GPy.models.SparseGPRegression(X,y, kernel, num_inducing=<span class="number">10</span>)</span><br><span class="line">model.optimize()</span><br><span class="line">start = time.time()</span><br><span class="line">mean, variance = model.predict(np.array([[<span class="number">1</span>]]))</span><br><span class="line">time_sgp = time.time()-start</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model.plot()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/gp/output_33_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit_GPy_5(time_gp / time_sgp)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 1.5 is: 3.7309941520467835
+</code></pre><h2 id="Bayesian-optimization-GPyOpt-documentation-tutorials"><a href="#Bayesian-optimization-GPyOpt-documentation-tutorials" class="headerlink" title="Bayesian optimization: GPyOpt (documentation, tutorials)"></a>Bayesian optimization: GPyOpt (<a href="http://pythonhosted.org/GPyOpt/" target="_blank" rel="noopener">documentation</a>, <a href="http://nbviewer.jupyter.org/github/SheffieldML/GPyOpt/blob/master/manual/index.ipynb" target="_blank" rel="noopener">tutorials</a>)</h2><p>In this part of the assignment we will try to <strong>find optimal hyperparameters to XGBoost model!</strong> We will use data from a small competition to speed things up, but keep in mind that the approach works even for large datasets.</p>
+<p>We will use diabetes dataset provided in sklearn package.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dataset = sklearn.datasets.load_diabetes()</span><br><span class="line">X = dataset[<span class="string">'data'</span>]</span><br><span class="line">y = dataset[<span class="string">'target'</span>]</span><br></pre></td></tr></table></figure>
+<p>We will use cross validation score to estimate accuracy and our goal will be to tune: <figure class="highlight plain"><figcaption><span>```learning_rate```, ```n_estimators``` parameters. The baseline MSE with default XGBoost parameters is $0.2$. Let's see if we can do better. First we have to define optimization function and domains.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line"># Score. Optimizer will try to find minimum, so we will add a &quot;-&quot; sign.</span><br><span class="line">def f(parameters):</span><br><span class="line">    parameters = parameters[0]</span><br><span class="line">    score = -cross_val_score(</span><br><span class="line">                XGBRegressor(learning_rate=parameters[0],</span><br><span class="line">                              max_depth=int(parameters[2]),</span><br><span class="line">                              n_estimators=int(parameters[3]),</span><br><span class="line">                              gamma=int(parameters[1]),</span><br><span class="line">                              min_child_weight = parameters[4]), </span><br><span class="line">                X, y, scoring=&apos;neg_mean_squared_error&apos;).mean()</span><br><span class="line">    score = np.array(score)</span><br><span class="line">    return score</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">baseline = -cross_val_score(XGBRegressor(), X, y, scoring=<span class="string">'neg_mean_squared_error'</span>).mean()</span><br><span class="line">baseline</span><br></pre></td></tr></table></figure>
+<pre><code>3498.951701204653
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Bounds (<span class="doctag">NOTE:</span> define continuous variables first, then discrete!)</span></span><br><span class="line">bounds = [</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'learning_rate'</span>, <span class="string">'type'</span>: <span class="string">'continuous'</span>, <span class="string">'domain'</span>: (<span class="number">0</span>, <span class="number">1</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'gamma'</span>, <span class="string">'type'</span>: <span class="string">'continuous'</span>, <span class="string">'domain'</span>: (<span class="number">0</span>, <span class="number">5</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'max_depth'</span>, <span class="string">'type'</span>: <span class="string">'discrete'</span>, <span class="string">'domain'</span>: (<span class="number">1</span>, <span class="number">50</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'n_estimators'</span>, <span class="string">'type'</span>: <span class="string">'discrete'</span>, <span class="string">'domain'</span>: (<span class="number">1</span>, <span class="number">300</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'min_child_weight'</span>, <span class="string">'type'</span>: <span class="string">'discrete'</span>, <span class="string">'domain'</span>: (<span class="number">1</span>, <span class="number">10</span>)&#125;</span><br><span class="line">         ]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">777</span>)</span><br><span class="line">optimizer = GPyOpt.methods.BayesianOptimization(f=f, domain=bounds,</span><br><span class="line">                                                acquisition_type =<span class="string">'MPI'</span>,</span><br><span class="line">                                                acquisition_par = <span class="number">0.1</span>,</span><br><span class="line">                                                exact_eval=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">max_iter = <span class="number">50</span></span><br><span class="line">max_time = <span class="number">60</span></span><br><span class="line">optimizer.run_optimization(max_iter, max_time)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer.plot_convergence()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/gp/output_44_0.png" alt="png"></p>
+<p>Best values of parameters:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer.X[np.argmin(optimizer.Y)]</span><br></pre></td></tr></table></figure>
+<pre><code>array([7.69938334e-02, 1.20414169e+00, 1.00000000e+00, 3.00000000e+02,
+       1.00000000e+00])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'MSE:'</span>, np.min(optimizer.Y), <span class="string">'Gain:'</span>, baseline/np.min(optimizer.Y)*<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>MSE: 3184.586757459207 Gain: 109.87145170434167
+</code></pre><p>We were able to get 9% boost wihtout tuning parameters by hand! Let’s see if you can do the same. </p>
+<p><b>Task 2.1:</b> Tune SVR model. Find optimal values for three parameters: <figure class="highlight plain"><figcaption><span>```epsilon``` and ```gamma```. Use range (1e-5, 1000) for ```C```, (1e-5, 10) for ```epsilon``` and ```gamma```. Use MPI as acquisition function with weight 0.1. Submit optimal value of epsilon that was found by a model.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">baseline = -cross_val_score(SVR(), X, y, scoring=&apos;neg_mean_squared_error&apos;).mean()</span><br><span class="line">baseline</span><br></pre></td></tr></table></figure></p>
+<pre><code>6067.652263997995
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(parameters)</span>:</span></span><br><span class="line">    parameters = parameters[<span class="number">0</span>]</span><br><span class="line">    score = -cross_val_score(</span><br><span class="line">                SVR(C=parameters[<span class="number">0</span>],</span><br><span class="line">                    epsilon=parameters[<span class="number">2</span>],</span><br><span class="line">                    gamma=parameters[<span class="number">1</span>]), </span><br><span class="line">                X, y, scoring=<span class="string">'neg_mean_squared_error'</span>).mean()</span><br><span class="line">    score = np.array(score)</span><br><span class="line">    <span class="keyword">return</span> score</span><br><span class="line">        </span><br><span class="line">bounds = [</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'C'</span>, <span class="string">'type'</span>: <span class="string">'continuous'</span>, <span class="string">'domain'</span>: (<span class="number">1e-5</span>, <span class="number">1000</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'gamma'</span>, <span class="string">'type'</span>: <span class="string">'continuous'</span>, <span class="string">'domain'</span>: (<span class="number">1e-5</span>, <span class="number">10</span>)&#125;,</span><br><span class="line">            &#123;<span class="string">'name'</span>: <span class="string">'epsilon'</span>, <span class="string">'type'</span>: <span class="string">'continuous'</span>, <span class="string">'domain'</span>: (<span class="number">1e-5</span>, <span class="number">10</span>)&#125;</span><br><span class="line">         ]</span><br><span class="line">        </span><br><span class="line">np.random.seed(<span class="number">777</span>)</span><br><span class="line">optimizer = GPyOpt.methods.BayesianOptimization(f=f, domain=bounds,</span><br><span class="line">                                                acquisition_type =<span class="string">'MPI'</span>,</span><br><span class="line">                                                acquisition_par = <span class="number">0.1</span>,</span><br><span class="line">                                                exact_eval=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">max_iter = <span class="number">50</span></span><br><span class="line">max_time = <span class="number">60</span></span><br><span class="line">optimizer.run_optimization(max_iter, max_time)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer.plot_convergence()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/bayesian_methods/gp/output_52_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### YOUR CODE HERE</span></span><br><span class="line">best_epsilon = optimizer.X[np.argmin(optimizer.Y)][<span class="number">2</span>]<span class="comment">### YOUR CODE HERE</span></span><br><span class="line">grader.submit_GPyOpt_1(best_epsilon)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.1 is: 10.0
+</code></pre><p><b>Task 2.2:</b> For the model above submit boost in improvement that you got after tuning hyperparameters (output percents) [e.g. if baseline MSE was 40 and you got 20, output number 200]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">performance_boost = baseline/np.min(optimizer.Y) <span class="comment">### YOUR CODE HERE</span></span><br><span class="line">grader.submit_GPyOpt_2(performance_boost*<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Current answer for task 2.2 is: 206.76782498646023
+</code></pre><h3 id="Authorization-amp-Submission"><a href="#Authorization-amp-Submission" class="headerlink" title="Authorization &amp; Submission"></a>Authorization &amp; Submission</h3><p>To submit assignment parts to Cousera platform, please, enter your e-mail and token into variables below. You can generate token on this programming assignment page. <b>Note:</b> Token expires 30 minutes after generation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">STUDENT_EMAIL = <span class="string">''</span><span class="comment"># EMAIL HERE</span></span><br><span class="line">STUDENT_TOKEN = <span class="string">''</span><span class="comment"># TOKEN HERE</span></span><br><span class="line">grader.status()</span><br></pre></td></tr></table></figure>
+<pre><code>You want to submit these numbers:
+Task 1.1: 1.0461813545396959
+Task 1.2 (mean): 0.6646774926102937
+Task 1.2 (variance): 1.1001478223790582
+Task 1.3: 1.625268165035024
+Task 1.4 (noise): 10.143341903515504
+Task 1.4 (just signal): 8.89286451503942e-16
+Task 1.5: 3.7309941520467835
+Task 2.1: 10.0
+Task 2.2: 206.76782498646023
+</code></pre><p>If you want to submit these answers, run cell below</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grader.submit(STUDENT_EMAIL, STUDENT_TOKEN)</span><br></pre></td></tr></table></figure>
+<pre><code>Submitted to Coursera platform. See results on assignment page!
+</code></pre></section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#bayesian-methods">
+    <span class="tag-code">bayesian-methods</span>
+  </a>
+
+  <a href="/tags#GP">
+    <span class="tag-code">GP</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/12/31/bayesian-methods-vae/">
+        <span class="nav-arrow">← </span>
+        
+          Bayesian Methods VAE
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Gaussian-processes-and-Bayesian-optimization"><span class="toc-nav-text">Gaussian processes and Bayesian optimization</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Installation"><span class="toc-nav-text">Installation</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Grading"><span class="toc-nav-text">Grading</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Gaussian-processes-GPy-documentation"><span class="toc-nav-text">Gaussian processes: GPy (documentation)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#可以看到GP自动optimize出来最初设定的gaussian-noise-variance"><span class="toc-nav-text">可以看到GP自动optimize出来最初设定的gaussian noise variance</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Sparce-GP"><span class="toc-nav-text">Sparce GP</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Bayesian-optimization-GPyOpt-documentation-tutorials"><span class="toc-nav-text">Bayesian optimization: GPyOpt (documentation, tutorials)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Authorization-amp-Submission"><span class="toc-nav-text">Authorization &amp; Submission</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2018/12/31/bayesian-methods-gp/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "dongnanzhy";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Bayesian Methods GP",
+        owner: "dongnanzhy",
+        repo: "dongnanzhy.github.io",
+        oauth: {
+          client_id: "6e8efba4b92de298d180",
+          client_secret: "ef25328fb6ac8348ad6921d892776be451db3639"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'http://yoursite.com/2018/12/31/bayesian-methods-gp/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

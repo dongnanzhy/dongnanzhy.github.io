@@ -10,7 +10,7 @@
   
   <title>
     
-      About | YAN&#39;s BLOG
+      YAN&#39;s BLOG
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -137,60 +137,73 @@
   </div>
 </header>
 
-    <div id="about-banner" style="background-image: url(https://ane4bf-datap1.s3-eu-west-1.amazonaws.com/wmocms/s3fs-public/AdobeStock_61977277.jpeg?_sAklsdGBHssqzx4Kb8kJBC12UB7uGXq)"></div>
-<div class="author">
-  <div class="head">
-    <img src="https://media.licdn.com/dms/image/C4E03AQFp_WhuTcr_GA/profile-displayphoto-shrink_200_200/0?e=1551916800&v=beta&t=GxA8NyddsjYX1-NPXrCa0D78r-SKdsk2_L1f6bbgDe8">
-  </div>
-  <h3>Yan Zhao</h3>
-  
-    <p class="description">EVERYTHING IS THEORETICALLY IMPOSSIBLE UNTIL IT IS DONE.</p>
-  
-  <section class="share-icons">
-    
-    
-    
-      <a class="icon-github" href="https://github.com/dongnanzhy" target="_blank">
-        <span class="fa-stack fa-lg">
-          <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-        </span>
-      </a>
-    
-    
-      <a class="icon-linkedin" href="https://www.linkedin.com/in/yan-zhao-22a9a6a0" target="_blank">
-        <span class="fa-stack fa-lg">
-          <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-        </span>
-      </a>
-    
-    
-      <a class="icon-kaggle" href="https://www.kaggle.com/dongnanzhy" target="_blank">
-        <span class="fa-stack fa-lg">
-          <i class="fa fa-stack-1x fa-inverse" ,="" style="color:#008ABC;">kaggle</i>
-        </span>
-      </a>
-    
-    
-    
-  </section>
+    <div id="article-banner">
+  <h2>Archives</h2>
+  <p class="post-date">文章归档</p>
 </div>
+<main class="app-body" id="archives">
+  
+  
+  
+    <section class="time-section">
+  <h1 class="section-year">
+    2018
+  </h1>
+  <div class="section-list">
+    
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/bayesian-methods-gp/" class="archive-title">Bayesian Methods GP</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/bayesian-methods-vae/" class="archive-title">Bayesian Methods VAE</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/bayesian-methods-mcmc/" class="archive-title">Bayesian Methods MCMC</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/bayesian-methods-em/" class="archive-title">Bayesian Methods EM</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/pandas-cheetsheet/" class="archive-title">Pandas Cheetsheet</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/how-i-create-github-io/" class="archive-title">How to create Github IO blog</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/31/about-me/" class="archive-title">About Me</a>
+        <p class="archive-date">12-31</p>
+      </div>
+    
+      <div class="section-list-item">
+        <a href="/2018/12/30/hello-world/" class="archive-title">Hello World</a>
+        <p class="archive-date">12-30</p>
+      </div>
+    
+  </div>
+</section>
+  
+</main>
 
 <script>
   (function () {
-    $('.header').removeClass('fixed-header')
-    var windowH = $(window).height();
-    var author = $('.author')
-    var bodyH = author.offset().top + author[0].offsetHeight + 71;
-    if (bodyH < windowH) {
-      author.css({
-        'margin-bottom': windowH - bodyH
-      })
-    }
+    var url = 'http://yoursite.com/tags/about-me/index.html';
+    $('#article-banner').geopattern(url);
+    $('.header').removeClass('fixed-header');
   })();
 </script>
-
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
