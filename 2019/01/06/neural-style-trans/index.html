@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Yan&#39;s git io">
+  <meta name="keyword" content="YAN&#39;s BLOG">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      neural-style-trans | YAN&#39;s BLOG
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png">
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>YAN's BLOG</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>neural-style-trans</h2>
+  <p class="post-date">2019-01-06</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Neural-Style-Transfer-with-tf-keras"><a href="#Neural-Style-Transfer-with-tf-keras" class="headerlink" title="Neural Style Transfer with tf.keras"></a>Neural Style Transfer with tf.keras</h1><table class="tfo-notebook-buttons" align="left"><br>  <td><br>    <a target="_blank" href="https://colab.research.google.com/github/tensorflow/models/blob/master/research/nst_blogpost/4_Neural_Style_Transfer_with_Eager_Execution.ipynb"><img src="https://www.tensorflow.org/images/colab_logo_32px.png">Run in Google Colab</a><br>  </td><br>  <td><br>    <a target="_blank" href="https://github.com/tensorflow/models/blob/master/research/nst_blogpost/4_Neural_Style_Transfer_with_Eager_Execution.ipynb"><img src="https://www.tensorflow.org/images/GitHub-Mark-32px.png">View source on GitHub</a><br>  </td><br></table>
+
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>In this tutorial, we will learn how to use deep learning to compose images in the style of another image (ever wish you could paint like Picasso or Van Gogh?). This is known as <strong>neural style transfer</strong>! This is a technique outlined in <a href="https://arxiv.org/abs/1508.06576" target="_blank" rel="noopener">Leon A. Gatys’ paper, A Neural Algorithm of Artistic Style</a>, which is a great read, and you should definitely check it out. </p>
+<p>But, what is neural style transfer?</p>
+<p>Neural style transfer is an optimization technique used to take three images, a <strong>content</strong> image, a <strong>style reference</strong> image (such as an artwork by a famous painter), and the <strong>input</strong> image you want to style – and blend them together such that the input image is transformed to look like the content image, but “painted” in the style of the style image.</p>
+<p>For example, let’s take an image of this turtle and Katsushika Hokusai’s <em>The Great Wave off Kanagawa</em>:</p>
+<p><img src="https://github.com/tensorflow/models/blob/master/research/nst_blogpost/Green_Sea_Turtle_grazing_seagrass.jpg?raw=1" alt="Drawing" style="width: 200px;"><br><img src="https://github.com/tensorflow/models/blob/master/research/nst_blogpost/The_Great_Wave_off_Kanagawa.jpg?raw=1" alt="Drawing" style="width: 200px;"></p>
+<p><a href="https://commons.wikimedia.org/wiki/File:Green_Sea_Turtle_grazing_seagrass.jpg" target="_blank" rel="noopener">Image of Green Sea Turtle</a><br>-By P.Lindgren [CC BY-SA 3.0  (<a href="https://creativecommons.org/licenses/by-sa/3.0)]" target="_blank" rel="noopener">https://creativecommons.org/licenses/by-sa/3.0)]</a>, from Wikimedia Common</p>
+<p>Now how would it look like if Hokusai decided to paint the picture of this Turtle exclusively with this style? Something like this?</p>
+<p><img src="https://github.com/tensorflow/models/blob/master/research/nst_blogpost/wave_turtle.png?raw=1" alt="Drawing" style="width: 500px;"></p>
+<p>Is this magic or just deep learning? Fortunately, this doesn’t involve any witchcraft: style transfer is a fun and interesting technique that showcases the capabilities and internal representations of neural networks.  </p>
+<p><strong>BP去optimize减少两个distance</strong></p>
+<p>The principle of neural style transfer is to define two distance functions, one that describes how different the content of two images are , $L_{content}$, and one that describes the difference between two images in terms of their style, $L_{style}$. Then, given three images, a desired style image, a desired content image, and the input image (initialized with the content image), we try to transform the input image to minimize the content distance with the content image and its style distance with the style image.<br>In summary, we’ll take the base input image, a content image that we want to match, and the style image that we want to match. We’ll transform the base input image by minimizing the content and style distances (losses) with backpropagation, creating an image that matches the content of the content image and the style of the style image. </p>
+<h3 id="Specific-concepts-that-will-be-covered"><a href="#Specific-concepts-that-will-be-covered" class="headerlink" title="Specific concepts that will be covered:"></a>Specific concepts that will be covered:</h3><p>In the process, we will build practical experience and develop intuition around the following concepts</p>
+<ul>
+<li><strong>Eager Execution</strong> - use TensorFlow’s imperative programming environment that evaluates operations immediately <ul>
+<li><a href="https://www.tensorflow.org/programmers_guide/eager" target="_blank" rel="noopener">Learn more about eager execution</a></li>
+<li><a href="https://www.tensorflow.org/get_started/eager" target="_blank" rel="noopener">See it in action</a></li>
+</ul>
+</li>
+<li><strong> Using <a href="https://keras.io/getting-started/functional-api-guide/" target="_blank" rel="noopener">Functional API</a> to define a model</strong> - we’ll build a subset of our model that will give us access to the necessary intermediate activations using the Functional API </li>
+<li><strong>Leveraging feature maps of a pretrained model</strong> - Learn how to use pretrained models and their feature maps </li>
+<li><strong>Create custom training loops</strong> - we’ll examine how to set up an optimizer to minimize a given loss with respect to input parameters</li>
+</ul>
+<h3 id="We-will-follow-the-general-steps-to-perform-style-transfer"><a href="#We-will-follow-the-general-steps-to-perform-style-transfer" class="headerlink" title="We will follow the general steps to perform style transfer:"></a>We will follow the general steps to perform style transfer:</h3><ol>
+<li>Visualize data</li>
+<li>Basic Preprocessing/preparing our data</li>
+<li>Set up loss functions </li>
+<li>Create model</li>
+<li>Optimize for loss function</li>
+</ol>
+<p><strong>Audience:</strong> This post is geared towards intermediate users who are comfortable with basic machine learning concepts. To get the most out of this post, you should: </p>
+<ul>
+<li>Read <a href="https://arxiv.org/abs/1508.06576" target="_blank" rel="noopener">Gatys’ paper</a> - we’ll explain along the way, but the paper will provide a more thorough understanding of the task</li>
+<li><a href="https://developers.google.com/machine-learning/crash-course/reducing-loss/gradient-descent" target="_blank" rel="noopener">Understand reducing loss with gradient descent</a></li>
+</ul>
+<p><strong>Time Estimated</strong>: 30 min</p>
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><h3 id="Download-Images"><a href="#Download-Images" class="headerlink" title="Download Images"></a>Download Images</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">img_dir = <span class="string">'./data/nst'</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(img_dir):</span><br><span class="line">    os.makedirs(img_dir)</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/d/d7/Green_Sea_Turtle_grazing_seagrass.jpg</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/<span class="number">0</span>/<span class="number">0</span>a/The_Great_Wave_off_Kanagawa.jpg</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/b/b4/Vassily_Kandinsky%<span class="number">2</span>C_1913_-_Composition_7.jpg</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/<span class="number">0</span>/<span class="number">00</span>/Tuebingen_Neckarfront.jpg</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/<span class="number">6</span>/<span class="number">68</span>/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg</span><br><span class="line">!wget --quiet -P ./data/nst https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/<span class="number">1024</span>px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg</span><br></pre></td></tr></table></figure>
+<h3 id="Import-and-configure-modules"><a href="#Import-and-configure-modules" class="headerlink" title="Import and configure modules"></a>Import and configure modules</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line">mpl.rcParams[<span class="string">'figure.figsize'</span>] = (<span class="number">10</span>,<span class="number">10</span>)</span><br><span class="line">mpl.rcParams[<span class="string">'axes.grid'</span>] = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> functools</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> tensorflow.contrib.eager <span class="keyword">as</span> tfe</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras.preprocessing <span class="keyword">import</span> image <span class="keyword">as</span> kp_image</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras <span class="keyword">import</span> models </span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras <span class="keyword">import</span> losses</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras <span class="keyword">import</span> layers</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br></pre></td></tr></table></figure>
+<pre><code>/home/dongnanzhy/miniconda3/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+</code></pre><p>We’ll begin by enabling <a href="https://www.tensorflow.org/guide/eager" target="_blank" rel="noopener">eager execution</a>. Eager execution allows us to work through this technique in the clearest and most readable way. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tf.enable_eager_execution()</span><br><span class="line">print(<span class="string">"Eager execution: &#123;&#125;"</span>.format(tf.executing_eagerly()))</span><br></pre></td></tr></table></figure>
+<pre><code>Eager execution: True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set up some global values here</span></span><br><span class="line">content_path = <span class="string">'./data/nst/Green_Sea_Turtle_grazing_seagrass.jpg'</span></span><br><span class="line">style_path = <span class="string">'./data/nst/The_Great_Wave_off_Kanagawa.jpg'</span></span><br></pre></td></tr></table></figure>
+<h2 id="Visualize-the-input"><a href="#Visualize-the-input" class="headerlink" title="Visualize the input"></a>Visualize the input</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_img</span><span class="params">(path_to_img)</span>:</span></span><br><span class="line">    max_dim = <span class="number">512</span></span><br><span class="line">    img = Image.open(path_to_img)</span><br><span class="line">    long = max(img.size)</span><br><span class="line">    scale = max_dim/long</span><br><span class="line">    img = img.resize((round(img.size[<span class="number">0</span>]*scale), round(img.size[<span class="number">1</span>]*scale)), Image.ANTIALIAS)</span><br><span class="line"></span><br><span class="line">    img = kp_image.img_to_array(img)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># We need to broadcast the image array such that it has a batch dimension </span></span><br><span class="line">    img = np.expand_dims(img, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> img</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imshow</span><span class="params">(img, title=None)</span>:</span></span><br><span class="line">    <span class="comment"># Remove the batch dimension</span></span><br><span class="line">    out = np.squeeze(img, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="comment"># Normalize for display </span></span><br><span class="line">    out = out.astype(<span class="string">'uint8'</span>)</span><br><span class="line">    plt.imshow(out)</span><br><span class="line">    <span class="keyword">if</span> title <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        plt.title(title)</span><br><span class="line">    plt.imshow(out)</span><br></pre></td></tr></table></figure>
+<p>These are input content and style images. We hope to “create” an image with the <strong>content of our content image</strong>, but with the <strong>style of the style image</strong>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">content = load_img(content_path).astype(<span class="string">'uint8'</span>)</span><br><span class="line">style = load_img(style_path).astype(<span class="string">'uint8'</span>)</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">imshow(content, <span class="string">'Content Image'</span>)</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">imshow(style, <span class="string">'Style Image'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/neural_style_trans/output_14_0.png" alt="png"></p>
+<h2 id="Prepare-the-data"><a href="#Prepare-the-data" class="headerlink" title="Prepare the data"></a>Prepare the data</h2><p>Let’s create methods that will allow us to load and preprocess our images easily. We perform the same preprocessing process as are expected according to the VGG training process. VGG networks are trained on image with each channel normalized by <code>mean = [103.939, 116.779, 123.68]</code>and with channels BGR.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_and_process_img</span><span class="params">(path_to_img)</span>:</span></span><br><span class="line">    img = load_img(path_to_img)</span><br><span class="line">    img = tf.keras.applications.vgg19.preprocess_input(img)</span><br><span class="line">    <span class="keyword">return</span> img</span><br></pre></td></tr></table></figure>
+<p>In order toview the outputs of our optimization, we are required to perform the inverse preprocessing step. Furthermore, since our optimized image may take its values anywhere between $- \infty$ and $\infty$, we must clip to maintain our values from within the 0-255 range.   </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deprocess_img</span><span class="params">(processed_img)</span>:</span></span><br><span class="line">    x = processed_img.copy()</span><br><span class="line">    <span class="keyword">if</span> len(x.shape) == <span class="number">4</span>:</span><br><span class="line">        x = np.squeeze(x, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">assert</span> len(x.shape) == <span class="number">3</span>, (<span class="string">"Input to deprocess image must be an image of "</span></span><br><span class="line">                             <span class="string">"dimension [1, height, width, channel] or [height, width, channel]"</span>)</span><br><span class="line">    <span class="keyword">if</span> len(x.shape) != <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">"Invalid input to deprocessing image"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># perform the inverse of the preprocessiing step</span></span><br><span class="line">    x[:, :, <span class="number">0</span>] += <span class="number">103.939</span></span><br><span class="line">    x[:, :, <span class="number">1</span>] += <span class="number">116.779</span></span><br><span class="line">    x[:, :, <span class="number">2</span>] += <span class="number">123.68</span></span><br><span class="line">    x = x[:, :, ::<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line">    x = np.clip(x, <span class="number">0</span>, <span class="number">255</span>).astype(<span class="string">'uint8'</span>)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h3 id="Define-content-and-style-representationst"><a href="#Define-content-and-style-representationst" class="headerlink" title="Define content and style representationst"></a>Define content and style representationst</h3><p>In order to get both the content and style representations of our image, we will look at some intermediate layers within our model. As we go deeper into the model, these intermediate layers represent higher and higher order features. In this case, we are using the network architecture VGG19, a pretrained image classification network. These intermediate layers are necessary to define the representation of content and style from our images. For an input image, we will try to match the corresponding style and content target representations at these intermediate layers. </p>
+<h4 id="Why-intermediate-layers"><a href="#Why-intermediate-layers" class="headerlink" title="Why intermediate layers?"></a>Why intermediate layers?</h4><p>You may be wondering why these intermediate outputs within our pretrained image classification network allow us to define style and content representations. At a high level, this phenomenon can be explained by the fact that in order for a network to perform image classification (which our network has been trained to do), it must understand the image. This involves taking the raw image as input pixels and building an internal representation through transformations that turn the raw image pixels into a complex understanding of the features present within the image. This is also partly why convolutional neural networks are able to generalize well: they’re able to capture the invariances and defining features within classes (e.g., cats vs. dogs) that are agnostic to background noise and other nuisances. Thus, somewhere between where the raw image is fed in and the classification label is output, the model serves as a complex feature extractor; hence by accessing intermediate layers, we’re able to describe the content and style of input images. </p>
+<p>Specifically we’ll pull out these intermediate layers from our network: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Content layer where will pull our feature maps</span></span><br><span class="line">content_layers = [<span class="string">'block5_conv2'</span>] </span><br><span class="line"></span><br><span class="line"><span class="comment"># Style layer we are interested in</span></span><br><span class="line">style_layers = [<span class="string">'block1_conv1'</span>,</span><br><span class="line">                <span class="string">'block2_conv1'</span>,</span><br><span class="line">                <span class="string">'block3_conv1'</span>, </span><br><span class="line">                <span class="string">'block4_conv1'</span>, </span><br><span class="line">                <span class="string">'block5_conv1'</span></span><br><span class="line">               ]</span><br><span class="line"></span><br><span class="line">num_content_layers = len(content_layers)</span><br><span class="line">num_style_layers = len(style_layers)</span><br></pre></td></tr></table></figure>
+<h2 id="Build-the-Model"><a href="#Build-the-Model" class="headerlink" title="Build the Model"></a>Build the Model</h2><p>In this case, we load <a href="https://keras.io/applications/#vgg19" target="_blank" rel="noopener">VGG19</a>, and feed in our input tensor to the model. This will allow us to extract the feature maps (and subsequently the content and style representations) of the content, style, and generated images.</p>
+<p>We use VGG19, as suggested in the paper. In addition, since VGG19 is a relatively simple model (compared with ResNet, Inception, etc) the feature maps actually work better for style transfer. </p>
+<p>In order to access the intermediate layers corresponding to our style and content feature maps, we get the corresponding outputs and using the Keras <a href="https://keras.io/getting-started/functional-api-guide/" target="_blank" rel="noopener"><strong>Functional API</strong></a>, we define our model with the desired output activations. </p>
+<p>With the Functional API defining a model simply involves defining the input and output: </p>
+<p><code>model = Model(inputs, outputs)</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_model</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">""" Creates our model with access to intermediate layers. </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    This function will load the VGG19 model and access the intermediate layers. </span></span><br><span class="line"><span class="string">    These layers will then be used to create a new model that will take input image</span></span><br><span class="line"><span class="string">    and return the outputs from these intermediate layers from the VGG model. </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    returns a keras model that takes image inputs and outputs the style and </span></span><br><span class="line"><span class="string">      content intermediate layers. </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># Load our model. We load pretrained VGG, trained on imagenet data</span></span><br><span class="line">    vgg = tf.keras.applications.vgg19.VGG19(include_top=<span class="keyword">False</span>, weights=<span class="string">'imagenet'</span>)</span><br><span class="line">    vgg.trainable = <span class="keyword">False</span></span><br><span class="line">    <span class="comment"># Get output layers corresponding to style and content layers </span></span><br><span class="line">    style_outputs = [vgg.get_layer(name).output <span class="keyword">for</span> name <span class="keyword">in</span> style_layers]</span><br><span class="line">    content_outputs = [vgg.get_layer(name).output <span class="keyword">for</span> name <span class="keyword">in</span> content_layers]</span><br><span class="line">    model_outputs = style_outputs + content_outputs</span><br><span class="line">    <span class="comment"># Build model </span></span><br><span class="line">    <span class="keyword">return</span> models.Model(vgg.input, model_outputs)</span><br></pre></td></tr></table></figure>
+<p>In the above code snippet, we’ll load our pretrained image classification network. Then we grab the layers of interest as we defined earlier. Then we define a Model by setting the model’s inputs to an image and the outputs to the outputs of the style and content layers. In other words, we created a model that will take an input image and output the content and style intermediate layers! </p>
+<h2 id="Define-and-create-our-loss-functions-content-and-style-distances"><a href="#Define-and-create-our-loss-functions-content-and-style-distances" class="headerlink" title="Define and create our loss functions (content and style distances)"></a>Define and create our loss functions (content and style distances)</h2><h3 id="Content-Loss"><a href="#Content-Loss" class="headerlink" title="Content Loss"></a>Content Loss</h3><p>Our content loss definition is actually quite simple. We’ll pass the network both the desired content image and our base input image. This will return the intermediate layer outputs (from the layers defined above) from our model. Then we simply take the euclidean distance between the two intermediate representations of those images.  </p>
+<p>More formally, content loss is a function that describes the distance of content from our output image $x$ and our content image, $p$. Let $C_{nn}$ be a pre-trained deep convolutional neural network. Again, in this case we use <a href="https://keras.io/applications/#vgg19" target="_blank" rel="noopener">VGG19</a>. Let $X$ be any image, then $C_{nn}(X)$ is the network fed by X. Let $F^l_{ij}(x) \in C_{nn}(x)$ and $P^l_{ij}(p) \in C_{nn}(p)$ describe the respective intermediate feature representation of the network with inputs $x$ and $p$ at layer $l$. Then we describe the content distance (loss) formally as: $$L^l_{content}(p, x) = \sum_{i, j} (F^l_{ij}(x) - P^l_{ij}(p))^2$$</p>
+<p>We perform backpropagation in the usual way such that we minimize this content loss. We thus change the initial image until it generates a similar response in a certain layer (defined in content_layer) as the original content image.</p>
+<p>This can be implemented quite simply. Again it will take as input the feature maps at a layer L in a network fed by x, our input image, and p, our content image, and return the content distance.</p>
+<h3 id="Computing-content-loss"><a href="#Computing-content-loss" class="headerlink" title="Computing content loss"></a>Computing content loss</h3><p>We will actually add our content losses at each desired layer. This way, each iteration when we feed our input image through the model (which in eager is simply <code>model(input_image)</code>!) all the content losses through the model will be properly compute and because we are executing eagerly, all the gradients will be computed. </p>
+<p><strong>这里输入的feature maps应该是(height, width, channels), 没有batch_size, 见get_feature_representations()</strong></p>
+<p><strong>输出是一个scala</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_content_loss</span><span class="params">(base_content, target)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> tf.reduce_mean(tf.square(base_content - target))</span><br></pre></td></tr></table></figure>
+<h2 id="Style-Loss"><a href="#Style-Loss" class="headerlink" title="Style Loss"></a>Style Loss</h2><p>Computing style loss is a bit more involved, but follows the same principle, this time feeding our network the base input image and the style image. However, instead of comparing the raw intermediate outputs of the base input image and the style image, we instead compare the Gram matrices of the two outputs. </p>
+<p>Mathematically, we describe the style loss of the base input image, $x$, and the style image, $a$, as the distance between the style representation (the gram matrices) of these images. We describe the style representation of an image as the correlation between different filter responses given by the Gram matrix  $G^l$, where $G^l_{ij}$ is the inner product between the vectorized feature map $i$ and $j$ in layer $l$. We can see that $G^l_{ij}$ generated over the feature map for a given image represents the correlation between feature maps $i$ and $j$. </p>
+<p>To generate a style for our base input image, we perform gradient descent from the content image to transform it into an image that matches the style representation of the original image. We do so by minimizing the mean squared distance between the feature correlation map of the style image and the input image. The contribution of each layer to the total style loss is described by<br>$$E_l = \frac{1}{4N_l^2M_l^2} \sum_{i,j}(G^l_{ij} - A^l_{ij})^2$$</p>
+<p>where $G^l_{ij}$ and $A^l_{ij}$ are the respective style representation in layer $l$ of $x$ and $a$. $N_l$ describes the number of feature maps, each of size $M_l = height * width$. Thus, the total style loss across each layer is<br>$$L_{style}(a, x) = \sum_{l \in L} w_l E_l$$<br>where we weight the contribution of each layer’s loss by some factor $w_l$. In our case, we weight each layer equally ($w_l =\frac{1}{|L|}$)</p>
+<h3 id="Computing-style-loss"><a href="#Computing-style-loss" class="headerlink" title="Computing style loss"></a>Computing style loss</h3><p>Again, we implement our loss as a distance metric . </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gram_matrix</span><span class="params">(input_tensor)</span>:</span></span><br><span class="line">    <span class="comment"># We make the image channels first </span></span><br><span class="line">    <span class="comment"># 输入input_tensor shape = (height, width, channels)</span></span><br><span class="line">    <span class="comment"># 输出output_tensor shape = (channels, channels)</span></span><br><span class="line">    channels = int(input_tensor.shape[<span class="number">-1</span>])</span><br><span class="line">    a = tf.reshape(input_tensor, [<span class="number">-1</span>, channels])</span><br><span class="line">    n = tf.shape(a)[<span class="number">0</span>]</span><br><span class="line">    gram = tf.matmul(a, a, transpose_a=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> gram / tf.cast(n, tf.float32)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_style_loss</span><span class="params">(base_style, gram_target)</span>:</span></span><br><span class="line">    <span class="comment"># 注意： 这里输入时input image的style feature和style image的GRAM matrix</span></span><br><span class="line">    <span class="string">"""Expects two images of dimension h, w, c"""</span></span><br><span class="line">    <span class="comment"># height, width, num filters of each layer 输入， 输出是scala</span></span><br><span class="line">    <span class="comment"># We scale the loss at a given layer by the size of the feature map and the number of filters</span></span><br><span class="line">    height, width, channels = base_style.get_shape().as_list()</span><br><span class="line">    gram_style = gram_matrix(base_style)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tf.reduce_mean(tf.square(gram_style - gram_target))</span><br></pre></td></tr></table></figure>
+<h2 id="Apply-style-transfer-to-our-images"><a href="#Apply-style-transfer-to-our-images" class="headerlink" title="Apply style transfer to our images"></a>Apply style transfer to our images</h2><h3 id="Run-Gradient-Descent"><a href="#Run-Gradient-Descent" class="headerlink" title="Run Gradient Descent"></a>Run Gradient Descent</h3><p>If you aren’t familiar with gradient descent/backpropagation or need a refresher, you should definitely check out this <a href="https://developers.google.com/machine-learning/crash-course/reducing-loss/gradient-descent" target="_blank" rel="noopener">awesome resource</a>.</p>
+<p>In this case, we use the <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adam" target="_blank" rel="noopener">Adam</a>* optimizer in order to minimize our loss. We iteratively update our output image such that it minimizes our loss: we don’t update the weights associated with our network, but instead we train our input image to minimize loss. In order to do this, we must know how we calculate our loss and gradients. </p>
+<p>* Note that L-BFGS, which if you are familiar with this algorithm is recommended, isn’t used in this tutorial because a primary motivation behind this tutorial was to illustrate best practices with eager execution, and, by using Adam, we can demonstrate the autograd/gradient tape functionality with custom training loops.</p>
+<p>We’ll define a little helper function that will load our content and style image, feed them forward through our network, which will then output the content and style feature representations from our model. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_feature_representations</span><span class="params">(model, content_path, style_path)</span>:</span></span><br><span class="line">    <span class="string">"""Helper function to compute our content and style feature representations.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    This function will simply load and preprocess both the content and style </span></span><br><span class="line"><span class="string">    images from their path. Then it will feed them through the network to obtain</span></span><br><span class="line"><span class="string">    the outputs of the intermediate layers. </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    model: The model that we are using.</span></span><br><span class="line"><span class="string">    content_path: The path to the content image.</span></span><br><span class="line"><span class="string">    style_path: The path to the style image</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    returns the style features and the content features. </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># Load our images in </span></span><br><span class="line">    content_image = load_and_process_img(content_path)</span><br><span class="line">    style_image = load_and_process_img(style_path)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># batch compute content and style features</span></span><br><span class="line">    style_outputs = model(style_image)</span><br><span class="line">    content_outputs = model(content_image)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Get the style and content feature representations from our model  </span></span><br><span class="line">    style_features = [style_layer[<span class="number">0</span>] <span class="keyword">for</span> style_layer <span class="keyword">in</span> style_outputs[:num_style_layers]]</span><br><span class="line">    content_features = [content_layer[<span class="number">0</span>] <span class="keyword">for</span> content_layer <span class="keyword">in</span> content_outputs[num_style_layers:]]</span><br><span class="line">    <span class="keyword">return</span> style_features, content_features</span><br></pre></td></tr></table></figure>
+<h3 id="Computing-the-loss-and-gradients"><a href="#Computing-the-loss-and-gradients" class="headerlink" title="Computing the loss and gradients"></a>Computing the loss and gradients</h3><p>Here we use <a href="https://www.tensorflow.org/programmers_guide/eager#computing_gradients" target="_blank" rel="noopener"><strong>tf.GradientTape</strong></a> to compute the gradient. It allows us to take advantage of the automatic differentiation available by tracing operations for computing the gradient later. It records the operations during the forward pass and then is able to compute the gradient of our loss function with respect to our input image for the backwards pass.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_loss</span><span class="params">(model, loss_weights, init_image, gram_style_features, content_features)</span>:</span></span><br><span class="line">    <span class="string">"""This function will compute the loss total loss.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    model: The model that will give us access to the intermediate layers</span></span><br><span class="line"><span class="string">    loss_weights: The weights of each contribution of each loss function. </span></span><br><span class="line"><span class="string">      (style weight, content weight, and total variation weight)</span></span><br><span class="line"><span class="string">      --------style_loss的weight和content_loss的weight，不是一样的----------</span></span><br><span class="line"><span class="string">      </span></span><br><span class="line"><span class="string">    init_image: Our initial base image. This image is what we are updating with </span></span><br><span class="line"><span class="string">      our optimization process. We apply the gradients wrt the loss we are </span></span><br><span class="line"><span class="string">      calculating to this image.</span></span><br><span class="line"><span class="string">    gram_style_features: Precomputed gram matrices corresponding to the </span></span><br><span class="line"><span class="string">      defined style layers of interest.</span></span><br><span class="line"><span class="string">    content_features: Precomputed outputs from defined content layers of </span></span><br><span class="line"><span class="string">      interest.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    returns the total loss, style loss, content loss, and total variational loss</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    style_weight, content_weight = loss_weights</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Feed our init image through our model. This will give us the content and </span></span><br><span class="line">    <span class="comment"># style representations at our desired layers. Since we're using eager</span></span><br><span class="line">    <span class="comment"># our model is callable just like any other function!</span></span><br><span class="line">    model_outputs = model(init_image)</span><br><span class="line"></span><br><span class="line">    style_output_features = model_outputs[:num_style_layers]</span><br><span class="line">    content_output_features = model_outputs[num_style_layers:]</span><br><span class="line"></span><br><span class="line">    style_score = <span class="number">0</span></span><br><span class="line">    content_score = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Accumulate style losses from all layers</span></span><br><span class="line">    <span class="comment"># Here, we equally weight each contribution of each loss layer</span></span><br><span class="line">    weight_per_style_layer = <span class="number">1.0</span> / float(num_style_layers)</span><br><span class="line">    <span class="keyword">for</span> target_style, comb_style <span class="keyword">in</span> zip(gram_style_features, style_output_features):</span><br><span class="line">        style_score += weight_per_style_layer * get_style_loss(comb_style[<span class="number">0</span>], target_style)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Accumulate content losses from all layers </span></span><br><span class="line">    weight_per_content_layer = <span class="number">1.0</span> / float(num_content_layers)</span><br><span class="line">    <span class="keyword">for</span> target_content, comb_content <span class="keyword">in</span> zip(content_features, content_output_features):</span><br><span class="line">        content_score += weight_per_content_layer* get_content_loss(comb_content[<span class="number">0</span>], target_content)</span><br><span class="line"></span><br><span class="line">    style_score *= style_weight</span><br><span class="line">    content_score *= content_weight</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Get total loss</span></span><br><span class="line">    loss = style_score + content_score </span><br><span class="line">    <span class="keyword">return</span> loss, style_score, content_score</span><br></pre></td></tr></table></figure>
+<p>Then computing the gradients is easy:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cfg 是输入参数，一个dictionary</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_grads</span><span class="params">(cfg)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> tape: </span><br><span class="line">        all_loss = compute_loss(**cfg)</span><br><span class="line">    <span class="comment"># Compute gradients wrt input image</span></span><br><span class="line">    total_loss = all_loss[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> tape.gradient(total_loss, cfg[<span class="string">'init_image'</span>]), all_loss</span><br></pre></td></tr></table></figure>
+<h3 id="Optimization-loop"><a href="#Optimization-loop" class="headerlink" title="Optimization loop"></a>Optimization loop</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> IPython.display</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_style_transfer</span><span class="params">(content_path, </span></span></span><br><span class="line"><span class="function"><span class="params">                       style_path,</span></span></span><br><span class="line"><span class="function"><span class="params">                       num_iterations=<span class="number">1000</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                       content_weight=<span class="number">1e3</span>, </span></span></span><br><span class="line"><span class="function"><span class="params">                       style_weight=<span class="number">1e-2</span>)</span>:</span> </span><br><span class="line">  <span class="comment"># We don't need to (or want to) train any layers of our model, so we set their</span></span><br><span class="line">  <span class="comment"># trainable to false. </span></span><br><span class="line">  model = get_model() </span><br><span class="line">  <span class="keyword">for</span> layer <span class="keyword">in</span> model.layers:</span><br><span class="line">    layer.trainable = <span class="keyword">False</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Get the style and content feature representations (from our specified intermediate layers) </span></span><br><span class="line">  <span class="comment"># 这里没有batch_size，见get_feature_representations定义</span></span><br><span class="line">  style_features, content_features = get_feature_representations(model, content_path, style_path)</span><br><span class="line">  gram_style_features = [gram_matrix(style_feature) <span class="keyword">for</span> style_feature <span class="keyword">in</span> style_features]</span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Set initial image</span></span><br><span class="line">  <span class="comment"># 初始化为content image， 设为eger variable</span></span><br><span class="line">  init_image = load_and_process_img(content_path)</span><br><span class="line">  init_image = tfe.Variable(init_image, dtype=tf.float32)</span><br><span class="line">  <span class="comment"># Create our optimizer</span></span><br><span class="line">  opt = tf.train.AdamOptimizer(learning_rate=<span class="number">5</span>, beta1=<span class="number">0.99</span>, epsilon=<span class="number">1e-1</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># For displaying intermediate images </span></span><br><span class="line">  iter_count = <span class="number">1</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Store our best result</span></span><br><span class="line">  best_loss, best_img = float(<span class="string">'inf'</span>), <span class="keyword">None</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Create a nice config </span></span><br><span class="line">  loss_weights = (style_weight, content_weight)</span><br><span class="line">  cfg = &#123;</span><br><span class="line">      <span class="string">'model'</span>: model,</span><br><span class="line">      <span class="string">'loss_weights'</span>: loss_weights,</span><br><span class="line">      <span class="string">'init_image'</span>: init_image,</span><br><span class="line">      <span class="string">'gram_style_features'</span>: gram_style_features,</span><br><span class="line">      <span class="string">'content_features'</span>: content_features</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="comment"># For displaying</span></span><br><span class="line">  num_rows = <span class="number">2</span></span><br><span class="line">  num_cols = <span class="number">5</span></span><br><span class="line">  display_interval = num_iterations/(num_rows*num_cols)</span><br><span class="line">  start_time = time.time()</span><br><span class="line">  global_start = time.time()</span><br><span class="line">  </span><br><span class="line">  norm_means = np.array([<span class="number">103.939</span>, <span class="number">116.779</span>, <span class="number">123.68</span>])</span><br><span class="line">  min_vals = -norm_means</span><br><span class="line">  max_vals = <span class="number">255</span> - norm_means   </span><br><span class="line">  </span><br><span class="line">  imgs = []</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(num_iterations):</span><br><span class="line">    grads, all_loss = compute_grads(cfg)</span><br><span class="line">    loss, style_score, content_score = all_loss</span><br><span class="line">    opt.apply_gradients([(grads, init_image)])   <span class="comment"># 更新init_image</span></span><br><span class="line">    clipped = tf.clip_by_value(init_image, min_vals, max_vals)  <span class="comment"># clip image, 0-255</span></span><br><span class="line">    init_image.assign(clipped)</span><br><span class="line">    end_time = time.time() </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> loss &lt; best_loss:</span><br><span class="line">      <span class="comment"># Update best loss and best image from total loss. </span></span><br><span class="line">      best_loss = loss</span><br><span class="line">      best_img = deprocess_img(init_image.numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> i % display_interval== <span class="number">0</span>:</span><br><span class="line">      start_time = time.time()</span><br><span class="line">      </span><br><span class="line">      <span class="comment"># Use the .numpy() method to get the concrete numpy array</span></span><br><span class="line">      plot_img = init_image.numpy()</span><br><span class="line">      plot_img = deprocess_img(plot_img)</span><br><span class="line">      imgs.append(plot_img)</span><br><span class="line">      IPython.display.clear_output(wait=<span class="keyword">True</span>)</span><br><span class="line">      IPython.display.display_png(Image.fromarray(plot_img))</span><br><span class="line">      print(<span class="string">'Iteration: &#123;&#125;'</span>.format(i))        </span><br><span class="line">      print(<span class="string">'Total loss: &#123;:.4e&#125;, '</span> </span><br><span class="line">            <span class="string">'style loss: &#123;:.4e&#125;, '</span></span><br><span class="line">            <span class="string">'content loss: &#123;:.4e&#125;, '</span></span><br><span class="line">            <span class="string">'time: &#123;:.4f&#125;s'</span>.format(loss, style_score, content_score, time.time() - start_time))</span><br><span class="line">  print(<span class="string">'Total time: &#123;:.4f&#125;s'</span>.format(time.time() - global_start))</span><br><span class="line">  IPython.display.clear_output(wait=<span class="keyword">True</span>)</span><br><span class="line">  plt.figure(figsize=(<span class="number">14</span>,<span class="number">4</span>))</span><br><span class="line">  <span class="keyword">for</span> i,img <span class="keyword">in</span> enumerate(imgs):</span><br><span class="line">      plt.subplot(num_rows,num_cols,i+<span class="number">1</span>)</span><br><span class="line">      plt.imshow(img)</span><br><span class="line">      plt.xticks([])</span><br><span class="line">      plt.yticks([])</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">return</span> best_img, best_loss</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">best, best_loss = run_style_transfer(content_path, </span><br><span class="line">                                     style_path, num_iterations=<span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/neural_style_trans/output_44_0.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Image.fromarray(best)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/neural_style_trans/output_45_0.png" alt="png"></p>
+<p>To download the image from Colab uncomment the following code:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#from google.colab import files</span></span><br><span class="line"><span class="comment">#files.download('wave_turtle.png')</span></span><br></pre></td></tr></table></figure>
+<h2 id="Visualize-outputs"><a href="#Visualize-outputs" class="headerlink" title="Visualize outputs"></a>Visualize outputs</h2><p>We “deprocess” the output image in order to remove the processing that was applied to it. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_results</span><span class="params">(best_img, content_path, style_path, show_large_final=True)</span>:</span></span><br><span class="line">  plt.figure(figsize=(<span class="number">10</span>, <span class="number">5</span>))</span><br><span class="line">  content = load_img(content_path) </span><br><span class="line">  style = load_img(style_path)</span><br><span class="line"></span><br><span class="line">  plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">  imshow(content, <span class="string">'Content Image'</span>)</span><br><span class="line"></span><br><span class="line">  plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">  imshow(style, <span class="string">'Style Image'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> show_large_final: </span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line"></span><br><span class="line">    plt.imshow(best_img)</span><br><span class="line">    plt.title(<span class="string">'Output Image'</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show_results(best, content_path, style_path)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/neural_style_trans/output_50_0.png" alt="png"></p>
+<p><img src="/images/neural_style_trans/output_50_1.png" alt="png"></p>
+<h2 id="Try-it-on-other-images"><a href="#Try-it-on-other-images" class="headerlink" title="Try it on other images"></a>Try it on other images</h2><p>Image of Tuebingen </p>
+<p>Photo By: Andreas Praefcke [GFDL (<a href="http://www.gnu.org/copyleft/fdl.html" target="_blank" rel="noopener">http://www.gnu.org/copyleft/fdl.html</a>) or CC BY 3.0  (<a href="https://creativecommons.org/licenses/by/3.0)]" target="_blank" rel="noopener">https://creativecommons.org/licenses/by/3.0)]</a>, from Wikimedia Commons</p>
+<h3 id="Starry-night-Tuebingen"><a href="#Starry-night-Tuebingen" class="headerlink" title="Starry night + Tuebingen"></a>Starry night + Tuebingen</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">best_starry_night, best_loss = run_style_transfer(<span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>,</span><br><span class="line">                                                  <span class="string">'/tmp/nst/1024px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show_results(best_starry_night, <span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>,</span><br><span class="line">             <span class="string">'/tmp/nst/1024px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="Pillars-of-Creation-Tuebingen"><a href="#Pillars-of-Creation-Tuebingen" class="headerlink" title="Pillars of Creation + Tuebingen"></a>Pillars of Creation + Tuebingen</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">best_poc_tubingen, best_loss = run_style_transfer(<span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>, </span><br><span class="line">                                                  <span class="string">'/tmp/nst/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show_results(best_poc_tubingen, </span><br><span class="line">             <span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>,</span><br><span class="line">             <span class="string">'/tmp/nst/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="Kandinsky-Composition-7-Tuebingen"><a href="#Kandinsky-Composition-7-Tuebingen" class="headerlink" title="Kandinsky Composition 7 + Tuebingen"></a>Kandinsky Composition 7 + Tuebingen</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">best_kandinsky_tubingen, best_loss = run_style_transfer(<span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>, </span><br><span class="line">                                                  <span class="string">'/tmp/nst/Vassily_Kandinsky,_1913_-_Composition_7.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show_results(best_kandinsky_tubingen, </span><br><span class="line">             <span class="string">'/tmp/nst/Tuebingen_Neckarfront.jpg'</span>,</span><br><span class="line">             <span class="string">'/tmp/nst/Vassily_Kandinsky,_1913_-_Composition_7.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="Pillars-of-Creation-Sea-Turtle"><a href="#Pillars-of-Creation-Sea-Turtle" class="headerlink" title="Pillars of Creation + Sea Turtle"></a>Pillars of Creation + Sea Turtle</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">best_poc_turtle, best_loss = run_style_transfer(<span class="string">'/tmp/nst/Green_Sea_Turtle_grazing_seagrass.jpg'</span>, </span><br><span class="line">                                                  <span class="string">'/tmp/nst/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show_results(best_poc_turtle, </span><br><span class="line">             <span class="string">'/tmp/nst/Green_Sea_Turtle_grazing_seagrass.jpg'</span>,</span><br><span class="line">             <span class="string">'/tmp/nst/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Key-Takeaways"><a href="#Key-Takeaways" class="headerlink" title="Key Takeaways"></a>Key Takeaways</h2><h3 id="What-we-covered"><a href="#What-we-covered" class="headerlink" title="What we covered:"></a>What we covered:</h3><ul>
+<li>We built several different loss functions and used backpropagation to transform our input image in order to minimize these losses<ul>
+<li>In order to do this we had to load in an a <strong>pretrained model</strong> and used its learned feature maps to describe the content and style representation of our images.<ul>
+<li>Our main loss functions were primarily computing the distance in terms of these different representations</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We implemented this with a custom model and <strong>eager execution</strong><ul>
+<li>We built our custom model with the Functional API </li>
+<li>Eager execution allows us to dynamically work with tensors, using a natural python control flow</li>
+<li>We manipulated tensors directly, which makes debugging and working with tensors easier. </li>
+</ul>
+</li>
+<li>We iteratively updated our image by applying our optimizers update rules using <strong>tf.gradient</strong>. The optimizer minimized a given loss with respect to our input image. </li>
+</ul>
+<p><strong><a href="https://commons.wikimedia.org/wiki/File:Tuebingen_Neckarfront.jpg" target="_blank" rel="noopener">Image of Tuebingen</a></strong><br>Photo By: Andreas Praefcke [GFDL (<a href="http://www.gnu.org/copyleft/fdl.html" target="_blank" rel="noopener">http://www.gnu.org/copyleft/fdl.html</a>) or CC BY 3.0  (<a href="https://creativecommons.org/licenses/by/3.0)]" target="_blank" rel="noopener">https://creativecommons.org/licenses/by/3.0)]</a>, from Wikimedia Commons</p>
+<p><strong><a href="https://commons.wikimedia.org/wiki/File:Green_Sea_Turtle_grazing_seagrass.jpg" target="_blank" rel="noopener">Image of Green Sea Turtle</a></strong><br>By P.Lindgren [CC BY-SA 3.0 (<a href="https://creativecommons.org/licenses/by-sa/3.0)]" target="_blank" rel="noopener">https://creativecommons.org/licenses/by-sa/3.0)]</a>, from Wikimedia Commons</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#CNN">
+    <span class="tag-code">CNN</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/12/31/bayesian-methods-gp/">
+        <span class="nav-arrow">← </span>
+        
+          Bayesian Methods GP
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/06/dcgan/">
+        
+          dcgan
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Neural-Style-Transfer-with-tf-keras"><span class="toc-nav-text">Neural Style Transfer with tf.keras</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Overview"><span class="toc-nav-text">Overview</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Specific-concepts-that-will-be-covered"><span class="toc-nav-text">Specific concepts that will be covered:</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#We-will-follow-the-general-steps-to-perform-style-transfer"><span class="toc-nav-text">We will follow the general steps to perform style transfer:</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Setup"><span class="toc-nav-text">Setup</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Download-Images"><span class="toc-nav-text">Download Images</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Import-and-configure-modules"><span class="toc-nav-text">Import and configure modules</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Visualize-the-input"><span class="toc-nav-text">Visualize the input</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Prepare-the-data"><span class="toc-nav-text">Prepare the data</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Define-content-and-style-representationst"><span class="toc-nav-text">Define content and style representationst</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Why-intermediate-layers"><span class="toc-nav-text">Why intermediate layers?</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Build-the-Model"><span class="toc-nav-text">Build the Model</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Define-and-create-our-loss-functions-content-and-style-distances"><span class="toc-nav-text">Define and create our loss functions (content and style distances)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Content-Loss"><span class="toc-nav-text">Content Loss</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Computing-content-loss"><span class="toc-nav-text">Computing content loss</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Style-Loss"><span class="toc-nav-text">Style Loss</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Computing-style-loss"><span class="toc-nav-text">Computing style loss</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Apply-style-transfer-to-our-images"><span class="toc-nav-text">Apply style transfer to our images</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Run-Gradient-Descent"><span class="toc-nav-text">Run Gradient Descent</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Computing-the-loss-and-gradients"><span class="toc-nav-text">Computing the loss and gradients</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Optimization-loop"><span class="toc-nav-text">Optimization loop</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Visualize-outputs"><span class="toc-nav-text">Visualize outputs</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Try-it-on-other-images"><span class="toc-nav-text">Try it on other images</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Starry-night-Tuebingen"><span class="toc-nav-text">Starry night + Tuebingen</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Pillars-of-Creation-Tuebingen"><span class="toc-nav-text">Pillars of Creation + Tuebingen</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kandinsky-Composition-7-Tuebingen"><span class="toc-nav-text">Kandinsky Composition 7 + Tuebingen</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Pillars-of-Creation-Sea-Turtle"><span class="toc-nav-text">Pillars of Creation + Sea Turtle</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Key-Takeaways"><span class="toc-nav-text">Key Takeaways</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#What-we-covered"><span class="toc-nav-text">What we covered:</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2019/01/06/neural-style-trans/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "dongnanzhy";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "neural-style-trans",
+        owner: "dongnanzhy",
+        repo: "dongnanzhy.github.io",
+        oauth: {
+          client_id: "6e8efba4b92de298d180",
+          client_secret: "ef25328fb6ac8348ad6921d892776be451db3639"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'http://yoursite.com/2019/01/06/neural-style-trans/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
