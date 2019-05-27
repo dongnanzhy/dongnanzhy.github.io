@@ -65,7 +65,7 @@
       
         <li class="list-item">
           
-            <a href="/" class="item-link">Home</a>
+            <a href="/" class="item-link active">Home</a>
           
         </li>
       
@@ -104,7 +104,7 @@
         
           <li class="menu-item">
             
-              <a href="/" class="menu-link">Home</a>
+              <a href="/" class="menu-link mobile-active">Home</a>
             
           </li>
         
@@ -137,98 +137,42 @@
   </div>
 </header>
 
-    <div id="article-banner">
-  <h2>Archives</h2>
-  <p class="post-date">文章归档</p>
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/12/30/hello-world/">Hello World</a>
+      </h2>
+      <p class="article-date">December 30, 2018</p>
+      
+        
+  <a href="/tags#Hexo">
+    <span class="tag-code">Hexo</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer ...
+        
+      </div>
+      <a class="more" href="/2018/12/30/hello-world/">Read more</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a class="unvisible" href="/">Next <span class="page-arrow">→</span></a>
+  
 </div>
-<main class="app-body" id="archives">
-  
-  
-  
-    <section class="time-section">
-  <h1 class="section-year">
-    2019
-  </h1>
-  <div class="section-list">
-    
-    
-      <div class="section-list-item">
-        <a href="/2019/05/26/transformer/" class="archive-title">transformer</a>
-        <p class="archive-date">05-26</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2019/01/06/dcgan/" class="archive-title">dcgan</a>
-        <p class="archive-date">01-06</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2019/01/06/neural-style-trans/" class="archive-title">neural-style-trans</a>
-        <p class="archive-date">01-06</p>
-      </div>
-    
-  </div>
-</section>
-  
-    <section class="time-section">
-  <h1 class="section-year">
-    2018
-  </h1>
-  <div class="section-list">
-    
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/bayesian-methods-gp/" class="archive-title">Bayesian Methods GP</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/bayesian-methods-vae/" class="archive-title">Bayesian Methods VAE</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/bayesian-methods-mcmc/" class="archive-title">Bayesian Methods MCMC</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/bayesian-methods-em/" class="archive-title">Bayesian Methods EM</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/pandas-cheetsheet/" class="archive-title">Pandas Cheetsheet</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/how-i-create-github-io/" class="archive-title">How to create Github IO blog</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/31/about-me/" class="archive-title">About Me</a>
-        <p class="archive-date">12-31</p>
-      </div>
-    
-      <div class="section-list-item">
-        <a href="/2018/12/30/hello-world/" class="archive-title">Hello World</a>
-        <p class="archive-date">12-30</p>
-      </div>
-    
-  </div>
-</section>
   
 </main>
 
-<script>
-  (function () {
-    var url = 'http://yoursite.com/tags/about-me/index.html';
-    $('#article-banner').geopattern(url);
-    $('.header').removeClass('fixed-header');
-  })();
-</script>
+
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
